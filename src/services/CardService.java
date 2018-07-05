@@ -30,12 +30,12 @@ public class CardService implements Service<Card>{
 			Date expiryDate = card.getExpiryDate();
 			String securityCode = card.getSecurityCode();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_insert_card(?,?,?,?,?)}");
-			oCSF.setString(2, cardId);
-			oCSF.setString(3, userId);
-			oCSF.setString(4, cardNumber);
-			oCSF.setDate(5, expiryDate);
-			oCSF.setString(6, securityCode);
+			CallableStatement oCSF = connection.prepareCall("{call sp_insert_card(?,?,?,?,?)}");
+			oCSF.setString(1, cardId);
+			oCSF.setString(2, userId);
+			oCSF.setString(3, cardNumber);
+			oCSF.setDate(4, expiryDate);
+			oCSF.setString(5, securityCode);
 			oCSF.execute();
 			oCSF.close();
 			return true;
@@ -105,12 +105,13 @@ public class CardService implements Service<Card>{
 			Date expiryDate = card.getExpiryDate();
 			String securityCode = card.getSecurityCode();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_update_card(?,?,?,?,?)}");
-			oCSF.setString(2, cardId);
-			oCSF.setString(3, userId);
-			oCSF.setString(4, cardNumber);
 			oCSF.setDate(5, expiryDate);
-			oCSF.setString(6, securityCode);
+			CallableStatement oCSF = connection.prepareCall("{call sp_update_card(?,?,?,?,?)}");
+			oCSF.setString(1, cardId);
+			oCSF.setString(2, userId);
+			oCSF.setString(3, cardNumber);
+			oCSF.setDate(4, expiryDate);
+			oCSF.setString(5, securityCode);
 			oCSF.execute();
 			oCSF.close();
 		}catch(SQLException e){
