@@ -28,7 +28,7 @@ public class Tiger{
 	public static void main(String[] args) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-	        con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "pass", "pass");
+	        con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "db_uSpring", "pass");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -366,23 +366,27 @@ public class Tiger{
 	    us.update(currentUser);
 	    accountScreen();
 	}
-	private static void editLocations() {
+	private static void editLocations()
+        {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private static void editCards() {
-		// TODO Auto-generated method stub
+	private static void editCards() 
+        {
+		
 		
 	}
 
-	private static String editString() {
+	private static String editString() 
+        {
 		System.out.println("Enter new value");
 	    String inp = sc.next();
 		return inp;
 	}
 
-	public static void allOrdersScreen(){
+	public static void allOrdersScreen()
+        {
 		System.out.println("\n*All orders*");
 		OrderService os = new OrderService(con);
 		ArrayList<Order> orders = os.getUserOrders(currentUser.getUserId());
@@ -391,7 +395,8 @@ public class Tiger{
 	    if(input==orders.size()) homeScreen();
 	    else oldOrderScreen(orders.get(input));
 	}
-	public static void oldOrderScreen(Order order) {
+	public static void oldOrderScreen(Order order) 
+        {
 		System.out.println("Placed: " +order.getPlaced_timestamp());
 		System.out.println("Delivered: " +order.getDelivery_timestamp());
 		System.out.println("Total price: " +order.getTotal_price());
