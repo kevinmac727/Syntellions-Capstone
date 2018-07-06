@@ -15,10 +15,13 @@ public class DeliveryStatusService {
 	public DeliveryStatusService() {
 		super();
 	}
+        //Constructor that takes a connection to the database.
 	public DeliveryStatusService(Connection connection) {
 		super();
 		this.connection = connection;
 	}
+        //Method adds new deliveryStatuses to the database.
+        //Takes a deliverStatus object as a parameter.
 	public void add(DeliveryStatus deliveryStatus){
 		try{
 			CallableStatement statement = connection.prepareCall("{call AddDeliveryStatus(?, ?)}");
@@ -31,7 +34,8 @@ public class DeliveryStatusService {
 			System.out.println(e.getMessage());
 		}	
 	}
-	
+	//Update delivery status.
+        //Updates existing delviery status based on the delivery_status_id.
 	public void update(DeliveryStatus deliveryStatus){
 		String statement = "UPDATE DELIVERY_STATUSES SET DELIVERY_STATUS = ?"
 				+ "WHERE DELIVERY_STATUS_ID = ?";
@@ -47,7 +51,7 @@ public class DeliveryStatusService {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+	//Deletes existing delivery statuses by using the ID.
 	public void deleteByID(String id){
 		try{
 			
@@ -60,6 +64,7 @@ public class DeliveryStatusService {
 			System.out.println(e.getMessage());
 		}
 	}
+        //Gets all of the delivery statuses in the database and stores them into an ArrayList.
 	public ArrayList<DeliveryStatus> getAll(){
 
 		ArrayList<DeliveryStatus> deliveryStatuses = new ArrayList<DeliveryStatus>();
@@ -77,6 +82,8 @@ public class DeliveryStatusService {
 		}
 		return deliveryStatuses;
 	}
+        //Gets the delivery status in the database by the string provided and 
+        //returns a DeliveryStatus object to the user.
 	public DeliveryStatus getByID(String id){
 		DeliveryStatus deliveryStatus = null;
 		

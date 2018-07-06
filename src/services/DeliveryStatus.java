@@ -8,7 +8,7 @@ public class DeliveryStatus {
 	public DeliveryStatus() {
 		super();
 	}
-
+        //Constructor of delivery status. Takes in a delivery status id and delivery status name.
 	public DeliveryStatus(String delivery_status_id, String delivery_status) {
 		super();
 		this.delivery_status_id = delivery_status_id;
@@ -37,6 +37,7 @@ public class DeliveryStatus {
 		this.delivery_status = delivery_status;
 	}
 	
+        //Compares two delivery statuses and checks if they are equal.
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
