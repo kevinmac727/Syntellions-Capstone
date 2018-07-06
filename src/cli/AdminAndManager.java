@@ -15,6 +15,8 @@ import domain.User;
 import services.CardService;
 import services.DeliveryMethod;
 import services.DeliveryMethodService;
+import services.DeliveryStatus;
+import services.DeliveryStatusService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -88,7 +90,18 @@ public class AdminAndManager {
                             }
                             break;
                     case 4:
-                            optionsScreen("Delivery Status");
+                            option = optionsScreen("Delivery Status");
+                            switch(option){
+                                case 1:
+                                    alterDeliveryStatusScreen();
+                                    break;
+                                case 2:
+                                    addDeliveryStatusScreen();
+                                    break;
+                                case 3:
+                                    deleteDeliveryStatusScreen();
+                                    break;
+                            }
                             break;
                     case 5:
                     {
@@ -430,5 +443,64 @@ public class AdminAndManager {
                 dms.deleteById(dmArr.get(input-1).getDelivery_method_id());
                 System.out.println("Delivery Method ID:" + dmArr.get(input - 1).getDelivery_method_id() + " has been deleted.");
             }
+        }
+
+        public static void alterDeliveryStatusScreen() {
+            System.out.println("List of delivery statuses");
+            
+            DeliveryStatusService dss = new DeliveryStatusService(con);
+            
+            ArrayList<DeliveryStatus> dsArr = dss.getAll();
+            int count =1;
+            for(DeliveryStatus ds:dsArr){
+                System.out.println(count + ". Delivery Status ID:" + ds.getDelivery_status_id()+ " Delivery Status:" + ds.getDelivery_status());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("Choose a delivery status to alter.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+
+            if (input - 1 < dsArr.size()){
+                DeliveryStatus newDS = dsArr.get(input - 1);
+                System.out.println("Delivery Status ID: " + newDS.getDelivery_status_id());
+                System.out.println("Current delivery status: " + newDS.getDelivery_status());
+                
+                System.out.println("Type in the new delivery status for this delivery status ID");
+                sc.nextLine();
+                String newDeliveryStatus = sc.nextLine();
+                newDS.setDelivery_status(newDeliveryStatus);
+                
+                dss.update(newDS);
+                System.out.println("Delivery status updated.");
+            }
+        }
+
+        public static void addDeliveryStatusScreen() {
+            System.out.println("Current Delivery statuses and their ids");
+            System.out.println("List of delivery statuses");
+            
+            DeliveryStatusService dss = new DeliveryStatusService(con);
+            
+            ArrayList<DeliveryStatus> dsArr = dss.getAll();
+            int count =1;
+            for(DeliveryStatus ds:dsArr){
+                System.out.println(count + ". Delivery Status ID:" + ds.getDelivery_status_id()+ " Delivery Status:" + ds.getDelivery_status());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("\nInsert an ID that is currently not in use.\n");
+            Scanner sc = new Scanner(System.in);
+            String dsID = sc.next();
+            System.out.println("Insert your deliver status");
+            sc.nextLine();
+            String ds = sc.nextLine();
+            DeliveryStatus dsToAdd = new DeliveryStatus(dsID, ds);
+            dss.add(dsToAdd);
+            System.out.println("Delivery Status added.");          
+        }
+
+        public static void deleteDeliveryStatusScreen() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 }

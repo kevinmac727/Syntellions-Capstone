@@ -71,7 +71,7 @@ public class DeliveryStatusService {
 		
 		try{
 			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * FROM DELIVERY_STATUSES");
+			ResultSet rs = statement.executeQuery("SELECT * FROM DELIVERY_STATUSES ORDER BY delivery_status_id");
 			
 			while(rs.next()){
 				DeliveryStatus deliveryStatus = new DeliveryStatus(rs.getString(1),rs.getString(2)); 
