@@ -213,12 +213,7 @@ public class Tiger{
                         break;
                     case 4:
                         input = storeDetailsScreen();
-                        //Hard code-ish way to just make user confirm to leave store details display
-                        int temp = -1;
-                        while(temp != 1)
-                        {
-                            temp = sc.nextInt();
-                        }
+                        
                         break;
                     case 5:
                         return -1;
@@ -600,7 +595,17 @@ public class Tiger{
 	private static void editLocations()
         {
 		// TODO Auto-generated method stub
-		
+                System.out.println("Please enter new street address");
+                String address = sc.next();
+                System.out.println("Please enter new city");
+                String city = sc.next();
+                System.out.println("Please enter new country");
+                String country = sc.next();
+                System.out.println("Please enter new state");
+                String state = sc.next();
+                System.out.println("Please enter new zip code");
+                String zipCode = sc.next();
+                
 	}
 
 	private static void editCards() 
@@ -661,6 +666,12 @@ public class Tiger{
                 System.out.println("1. Go Back");
                 //Test, no loop or input required at this screen?
 		//homeScreen();
+                //Hard code-ish way to just make user confirm to leave store details display
+                int temp = -1;
+                while(temp != 1)
+                {
+                    temp = sc.nextInt();
+                }
                 return -1;
 	}
 
