@@ -501,6 +501,21 @@ public class AdminAndManager {
         }
 
         public static void deleteDeliveryStatusScreen() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+            System.out.println("Current Delivery Statuses and their ids");
+            DeliveryStatusService dss = new DeliveryStatusService(con);
+            ArrayList<DeliveryStatus> dsArr= dss.getAll();
+            int count =1;
+            for(DeliveryStatus ds:dsArr){
+                System.out.println(count + ". Delivery Status ID:" + ds.getDelivery_status_id() + " Delivery Status:" + ds.getDelivery_status());
+                count ++;
+            }
+            System.out.println("Select the delivery statys you wish to delete.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+            if(input - 1 < dsArr.size()){
+                dss.deleteByID(dsArr.get(input-1).getDelivery_status_id());
+                System.out.println("Delivery Status ID:" + dsArr.get(input - 1).getDelivery_status_id() + " has been deleted.");
+            }            
         }
 }
