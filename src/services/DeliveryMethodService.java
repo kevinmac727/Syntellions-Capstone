@@ -16,11 +16,13 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 	public DeliveryMethodService() {
 		super();
 	}
+        //Takes in a connection to the database.
 	public DeliveryMethodService(Connection connection) {
 		super();
 		this.connection = connection;
 	}
 	
+        //Adds a new type of delivery method in the database.
 	@Override
 	public boolean add(DeliveryMethod deliveryMethod){
 		try{
@@ -36,6 +38,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 		}	
 	}
 	
+        //Updates existing delivery methods based on the id provided.
 	@Override
 	public void update(DeliveryMethod deliveryMethod){
 		String statement = "UPDATE DELIVERY_METHODS SET DELIVERY_METHOD = ?"
@@ -53,6 +56,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 		}
 	}
 	
+        //Returns all delivery methods stored in the database.
 	@Override
 	public ArrayList<DeliveryMethod> getAll(){
 
@@ -60,7 +64,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 		
 		try{
 			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * FROM DELIVERY_METHODS");
+			ResultSet rs = statement.executeQuery("SELECT * FROM DELIVERY_METHODS ORDER BY delivery_method_id");
 			
 			while(rs.next()){
 				DeliveryMethod deliveryMethod = new DeliveryMethod(rs.getString(1),rs.getString(2)); 
@@ -72,6 +76,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 		return deliverMethods;
 	}
 	
+        //Returns existing delivery methods based on the ID of the delivery method.
 	@Override
 	public DeliveryMethod getById(String id){
 		DeliveryMethod deliveryMethod = null;
@@ -92,6 +97,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
 		
 		return deliveryMethod;
 	}
+        //Deletes delivery methods from the database using a stored procedure.
 	@Override
 	public void deleteById(String id) {
 		try{

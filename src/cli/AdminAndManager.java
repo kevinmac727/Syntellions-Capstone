@@ -13,6 +13,10 @@ import domain.Order;
 import domain.Store;
 import domain.User;
 import services.CardService;
+import services.DeliveryMethod;
+import services.DeliveryMethodService;
+import services.DeliveryStatus;
+import services.DeliveryStatusService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -43,82 +47,117 @@ public class AdminAndManager {
 		options.add("Alter Order_items"); //Probably don't need this one
 		options.add("Alter Users");
 		options.add("Alter User Statuses");
-		ServiceWrapper.printOptions(options);
-		Scanner sc = new Scanner(System.in);
-	    int input = sc.nextInt();
-	    int option = 0;
-	    switch(input){
-	    	case 1:
-	    		{
-	    			option = optionsScreen("Card");
-	    			switch(option){
-	    				case 1:
-	    					alterCardScreen();
-	    				case 2:
-	    					addCardScreen();
-	    				case 3:
-	    					deleteCardScreen();
-	    				case 4: 
-	    					adminScreen();
-	    			}
-	    			break;
-	    		}
-	    	case 3:
-	    		optionsScreen("Delivery Method");
-	    	case 4:
-	    		optionsScreen("Delivery Statuse");
-	    	case 5:
-	    	{
-	    		option = optionsScreen("Item");
-    			switch(option){
-    				case 1:
-    					alterItemScreen();
-    					break;
-    				case 2:
-    					addItemScreen();
-    					break;
-    				case 3:
-    					deleteItemScreen();
-    					break;
-    				case 4:
-    					adminScreen();
-    					break;
-    				case 5:
-    					System.exit(0);
-    			}
-    			break;
-	    	}
-	    	case 6:
-	    		optionsScreen("Item Type");
-	    	case 7:
-	    		optionsScreen("Location");
-	    	case 8:
-	    		optionsScreen("Order");
-	    	case 9:
-	    		optionsScreen("Order Item");
-	    	case 10:
-	    	{
-	    		option = optionsScreen("User");
-	    		switch(option){
-	    			case 1:
-	    				System.out.println("not yet supported");
-	    			case 2:
-	    				addUserScreen();
-	    			case 3:
-	    				deleteUserScreen();
-	    		}
-	    			
-	    	}
-	    	case 11:
-	    		optionsScreen("User Statuse");
-	    	case 12:
-	    		adminScreen();
-	    	case 13:
-	    		System.exit(0);
-	    }
-	    
-	    adminScreen();
-	    
+                options.add("Exit Application");
+                options.add("Go back");
+                int input = 0;
+                int option;
+            while(true){
+                if(input == 13){
+                    break;
+                }
+                ServiceWrapper.printOptions(options);
+                Scanner sc = new Scanner(System.in);
+                input = sc.nextInt();
+                switch(input){
+                    case 1:
+                            {
+                                    option = optionsScreen("Card");
+                                    switch(option){
+                                            case 1:
+                                                    alterCardScreen();
+                                                    break;
+                                            case 2:
+                                                    addCardScreen();
+                                                    break;
+                                            case 3:
+                                                    deleteCardScreen();
+                                                    break;
+                                    }
+                                    break;
+                            }
+                    case 3:
+                            option = optionsScreen("Delivery Method");
+                            switch(option){
+                                case 1:
+                                    alterDeliveryMethodScreen();
+                                    break;
+                                case 2:
+                                    addDeliveryMethodScreen();
+                                    break;
+                                case 3:
+                                    deleteDeliveryMethodScreen();
+                                    break;
+                            }
+                            break;
+                    case 4:
+                            option = optionsScreen("Delivery Status");
+                            switch(option){
+                                case 1:
+                                    alterDeliveryStatusScreen();
+                                    break;
+                                case 2:
+                                    addDeliveryStatusScreen();
+                                    break;
+                                case 3:
+                                    deleteDeliveryStatusScreen();
+                                    break;
+                            }
+                            break;
+                    case 5:
+                    {
+                            option = optionsScreen("Item");
+                            switch(option){
+                                    case 1:
+                                            alterItemScreen();
+                                            break;
+                                    case 2:
+                                            addItemScreen();
+                                            break;
+                                    case 3:
+                                            deleteItemScreen();
+                                            break;
+                                    case 4:
+                                            adminScreen();
+                                            break;
+                                    case 5:
+                                            System.exit(0);
+                            }
+                            break;
+                    }
+                    case 6:
+                            optionsScreen("Item Type");
+                            break;
+                    case 7:
+                            optionsScreen("Location");
+                            break;
+                    case 8:
+                            optionsScreen("Order");
+                            break;
+                    case 9:
+                            optionsScreen("Order Item");
+                            break;
+                    case 10:
+                    {
+                            option = optionsScreen("User");
+                            switch(option){
+                                    case 1:
+                                            System.out.println("not yet supported");
+                                    case 2:
+                                            addUserScreen();
+                                    case 3:
+                                            deleteUserScreen();
+                            }
+
+                    }
+                        break;
+                    case 11:
+                            optionsScreen("User Status");
+                            break;
+                    case 12:
+                            System.exit(0);
+                }
+
+            }
 	}
 	
 	
@@ -336,4 +375,132 @@ public class AdminAndManager {
 	    System.out.println(uArr.get(input-1).getFirstName() + "has been deleted");
 		
 	}
+
+        public static void alterDeliveryMethodScreen() {
+            System.out.println("List of delivery methods");
+            DeliveryMethodService dms = new DeliveryMethodService(con);
+            ArrayList<DeliveryMethod> dmArr= dms.getAll();
+            int count =1;
+            for(DeliveryMethod dm:dmArr){
+                System.out.println(count + ". Delivery Method ID:" + dm.getDelivery_method_id() + " Delivery Method:" + dm.getDelivery_method());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("Choose a delivery method to alter.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+            if (input - 1 < dmArr.size()){
+                DeliveryMethod newDM = dmArr.get(input - 1);
+                System.out.println("Delivery Method ID: " + newDM.getDelivery_method_id());
+                System.out.println("Current delivery method: " + newDM.getDelivery_method());
+                
+                System.out.println("Type in the new delivery method for this delivery method ID");
+                sc.nextLine();
+                String newDeliveryMethod = sc.nextLine();
+                newDM.setDelivery_method(newDeliveryMethod);
+                
+                dms.update(newDM);
+                System.out.println("Delivery method updated.");
+            }
+        }
+
+        public static void addDeliveryMethodScreen() {
+            System.out.println("Current Delivery methods and their ids");
+            DeliveryMethodService dms = new DeliveryMethodService(con);
+            ArrayList<DeliveryMethod> dmArr= dms.getAll();
+            int count =1;
+            for(DeliveryMethod dm:dmArr){
+                System.out.println(count + ". Delivery Method ID:" + dm.getDelivery_method_id() + " Delivery Method:" + dm.getDelivery_method());
+                count ++;
+            }
+
+            System.out.println("\nInsert an ID that is currently not in use.\n");
+            Scanner sc = new Scanner(System.in);
+            String dmID = sc.next();
+            System.out.println("Insert your deliver method");
+            sc.nextLine();
+            String dm = sc.nextLine();
+            DeliveryMethod dmToAdd = new DeliveryMethod(dmID, dm);
+            dms.add(dmToAdd);
+            System.out.println("Delivery Method added.");
+            
+            
+        }
+
+        public static void deleteDeliveryMethodScreen() {
+            System.out.println("Current Delivery methods and their ids");
+            DeliveryMethodService dms = new DeliveryMethodService(con);
+            ArrayList<DeliveryMethod> dmArr= dms.getAll();
+            int count =1;
+            for(DeliveryMethod dm:dmArr){
+                System.out.println(count + ". Delivery Method ID:" + dm.getDelivery_method_id() + " Delivery Method:" + dm.getDelivery_method());
+                count ++;
+            }
+            System.out.println("Select the delivery method you wish to delete.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+            if(input - 1 < dmArr.size()){
+                dms.deleteById(dmArr.get(input-1).getDelivery_method_id());
+                System.out.println("Delivery Method ID:" + dmArr.get(input - 1).getDelivery_method_id() + " has been deleted.");
+            }
+        }
+
+        public static void alterDeliveryStatusScreen() {
+            System.out.println("List of delivery statuses");
+            
+            DeliveryStatusService dss = new DeliveryStatusService(con);
+            
+            ArrayList<DeliveryStatus> dsArr = dss.getAll();
+            int count =1;
+            for(DeliveryStatus ds:dsArr){
+                System.out.println(count + ". Delivery Status ID:" + ds.getDelivery_status_id()+ " Delivery Status:" + ds.getDelivery_status());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("Choose a delivery status to alter.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+
+            if (input - 1 < dsArr.size()){
+                DeliveryStatus newDS = dsArr.get(input - 1);
+                System.out.println("Delivery Status ID: " + newDS.getDelivery_status_id());
+                System.out.println("Current delivery status: " + newDS.getDelivery_status());
+                
+                System.out.println("Type in the new delivery status for this delivery status ID");
+                sc.nextLine();
+                String newDeliveryStatus = sc.nextLine();
+                newDS.setDelivery_status(newDeliveryStatus);
+                
+                dss.update(newDS);
+                System.out.println("Delivery status updated.");
+            }
+        }
+
+        public static void addDeliveryStatusScreen() {
+            System.out.println("Current Delivery statuses and their ids");
+            System.out.println("List of delivery statuses");
+            
+            DeliveryStatusService dss = new DeliveryStatusService(con);
+            
+            ArrayList<DeliveryStatus> dsArr = dss.getAll();
+            int count =1;
+            for(DeliveryStatus ds:dsArr){
+                System.out.println(count + ". Delivery Status ID:" + ds.getDelivery_status_id()+ " Delivery Status:" + ds.getDelivery_status());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("\nInsert an ID that is currently not in use.\n");
+            Scanner sc = new Scanner(System.in);
+            String dsID = sc.next();
+            System.out.println("Insert your deliver status");
+            sc.nextLine();
+            String ds = sc.nextLine();
+            DeliveryStatus dsToAdd = new DeliveryStatus(dsID, ds);
+            dss.add(dsToAdd);
+            System.out.println("Delivery Status added.");          
+        }
+
+        public static void deleteDeliveryStatusScreen() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
 }

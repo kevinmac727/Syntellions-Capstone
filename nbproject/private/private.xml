@@ -3,10 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/syntel.PHX440G3-2815XD/Desktop/Homework-Notes/Java/Examples/CoreJava/Capstone/src/cli/Tiger.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815XD/Desktop/Homework-Notes/Java/Examples/CoreJava/Capstone/src/services/CardService.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815XD/Desktop/Homework-Notes/Java/Examples/CoreJava/Capstone/src/cli/AdminAndManager.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815XD/Desktop/Homework-Notes/Java/Examples/CoreJava/Capstone/src/cli/ServiceWrapper.java</file>
+<<<<<<< HEAD
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/LocationService.java</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/SQl/Stored%20Procedures/update_card_sp.sql</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/DeliveryStatus.java</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/SQl/Stored%20Procedures/user_sp.sql</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/CardService.java</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/cli/Tiger.java</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/SQl/database_creation.sql</file>
+            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/cli/AdminAndManager.java</file>
+=======
+            <file>file:/C:/Examples/Syntellions-Capstone/src/testing/DatabaseTestMethods.java</file>
+            <file>file:/C:/Examples/Syntellions-Capstone/src/services/MenuServices.java</file>
+            <file>file:/C:/Examples/Syntellions-Capstone/src/cli/Tiger.java</file>
+>>>>>>> 91594c9bc92ce7c1a9a55aac5e2286b002ced115
         </group>
     </open-files>
 </project-private>

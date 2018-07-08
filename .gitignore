@@ -1,0 +1,10 @@
+<<<<<<< HEAD
+*.properties
+*.class
+=======
+/build/
+/nbproject/private/
+*.xml
+*.properties
+*.class
+>>>>>>> master
