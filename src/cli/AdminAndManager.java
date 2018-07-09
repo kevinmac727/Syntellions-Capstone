@@ -19,6 +19,8 @@ import services.DeliveryMethod;
 import services.DeliveryMethodService;
 import services.DeliveryStatus;
 import services.DeliveryStatusService;
+import services.ItemType;
+import services.ItemTypeService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -580,7 +582,38 @@ public class AdminAndManager {
         }
 
         public static void alterItemTypeScreen() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            
+            System.out.println("List of item types");
+            
+            ItemTypeService its = new ItemTypeService(con);
+            
+            ArrayList<ItemType> itemTypeArr = its.getAll();
+            int count = 1;
+            for(ItemType it:itemTypeArr){
+                System.out.println(count + ". Item Type ID: " + it.getItemTypeId() + " Item Type: " + it.getItemType());
+                count ++;
+            }
+            
+            System.out.println();
+            System.out.println("Choose an item type to alter.");
+            
+            Scanner sc = new Scanner(System.in);
+            
+            int input = sc.nextInt();
+            
+            if (input - 1 < itemTypeArr.size()){
+                ItemType newItemType = itemTypeArr.get(input - 1);
+                System.out.println("Item Type ID: " + newItemType.getItemTypeId());
+                System.out.println("Item Type: " + newItemType.getItemType());
+                
+                System.out.println("Type in the new item type for this item type ID");
+                sc.nextLine();
+                String newItemTypeString = sc.nextLine();
+                newItemType.setItemType(newItemTypeString);
+                
+                its.update(newItemType);
+                System.out.println("Item type added.");
+            }
         }
 
         public static void addItemTypeScreen() {

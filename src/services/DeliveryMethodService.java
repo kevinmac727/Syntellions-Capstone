@@ -41,7 +41,7 @@ public class DeliveryMethodService implements Service<DeliveryMethod>{
         //Updates existing delivery methods based on the id provided.
 	@Override
 	public void update(DeliveryMethod deliveryMethod){
-		String statement = "UPDATE DELIVERY_METHODS SET DELIVERY_METHOD = ?"
+		String statement = "UPDATE DELIVERY_METHODS SET DELIVERY_METHOD = ? "
 				+ "WHERE DELIVERY_METHOD_ID = ?";
 		
 		try{
