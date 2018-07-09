@@ -8,10 +8,12 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import domain.Card;
+import domain.IdException;
 import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
+import domain.UserStatus;
 import services.CardService;
 import services.DeliveryMethod;
 import services.DeliveryMethodService;
@@ -21,6 +23,7 @@ import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
 import services.UserService;
+import services.UserStatusService;
 
 public class AdminAndManager {
 	
@@ -37,7 +40,6 @@ public class AdminAndManager {
 		ArrayList<String> options = new ArrayList<String>();
 		System.out.println("Admin View");
 		options.add("Alter Cards");
-		options.add("Alter Combos");
 		options.add("Alter Delivery Methods");
 		options.add("Alter Delivery Statuses");
 		options.add("Alter Items");
@@ -52,7 +54,7 @@ public class AdminAndManager {
                 int input = 0;
                 int option;
             while(true){
-                if(input == 13){
+                if(input == 12){
                     break;
                 }
                 ServiceWrapper.printOptions(options);
@@ -75,7 +77,7 @@ public class AdminAndManager {
                                     }
                                     break;
                             }
-                    case 3:
+                    case 2:
                             option = optionsScreen("Delivery Method");
                             switch(option){
                                 case 1:
@@ -89,7 +91,7 @@ public class AdminAndManager {
                                     break;
                             }
                             break;
-                    case 4:
+                    case 3:
                             option = optionsScreen("Delivery Status");
                             switch(option){
                                 case 1:
@@ -103,7 +105,7 @@ public class AdminAndManager {
                                     break;
                             }
                             break;
-                    case 5:
+                    case 4:
                     {
                             option = optionsScreen("Item");
                             switch(option){
@@ -116,44 +118,102 @@ public class AdminAndManager {
                                     case 3:
                                             deleteItemScreen();
                                             break;
-                                    case 4:
-                                            adminScreen();
-                                            break;
-                                    case 5:
-                                            System.exit(0);
                             }
                             break;
                     }
+                    case 5://TODO
+                        {      
+                            option = optionsScreen("Item Type");
+                            switch(option){
+                                case 1:
+                                    alterItemTypeScreen();
+                                    break;
+                                case 2:
+                                    addItemTypeScreen();
+                                    break;
+                                case 3:
+                                    deleteItemTypeScreen();
+                                    break;
+                            }
+                        }
+                        break;
                     case 6:
-                            optionsScreen("Item Type");
+                            option = optionsScreen("Location");
+                            switch(option){
+                                case 1:
+                                    alterLocationScreen();
+                                    break;
+                                case 2:
+                                    addLocationScreen();
+                                    break;
+                                case 3: 
+                                    deleteLocationScreen();
+                                    break;
+                            }
                             break;
-                    case 7:
-                            optionsScreen("Location");
+                    case 7: {
+                                option = optionsScreen("Order");
+                                switch(option){
+                                    case 1:
+                                        alterOrderScreen();
+                                        break;
+                                    case 2:
+                                        addOrderScreen();
+                                        break;
+                                    case 3:
+                                        deleteOrderScreen();
+                                        break;
+                                }
+                            }
                             break;
                     case 8:
-                            optionsScreen("Order");
+                            option = optionsScreen("Order Item");
+                            switch(option){
+                                case 1:
+                                    alterOrderItemScreen();
+                                    break;
+                                case 2:
+                                    addOrderItemScreen();
+                                    break;
+                                case 3:
+                                    deleteOrderItemScreen();
+                                    break;                           
+                                          
+                            }
                             break;
                     case 9:
-                            optionsScreen("Order Item");
-                            break;
-                    case 10:
                     {
                             option = optionsScreen("User");
                             switch(option){
                                     case 1:
-                                            System.out.println("not yet supported");
+                                            alterUserScreen();
+                                            break;
                                     case 2:
                                             addUserScreen();
+                                            break;
                                     case 3:
                                             deleteUserScreen();
+                                            break;
                             }
 
                     }
                         break;
-                    case 11:
-                            optionsScreen("User Status");
+                    case 10:
+                            option = optionsScreen("User Status");
+                            switch(option){
+                                case 1:
+                                    alterUserStatusScreen();
+                                    break;
+                                case 2:
+                                    addUserStatusScreen();
+                                    break;
+                                case 3:
+                                    deleteUserStatusScreen();
+                                    break;
+                                            
+                            }
                             break;
-                    case 12:
+                    case 11:
                             System.exit(0);
                 }
 
@@ -518,4 +578,155 @@ public class AdminAndManager {
                 System.out.println("Delivery Status ID:" + dsArr.get(input - 1).getDelivery_status_id() + " has been deleted.");
             }            
         }
+
+        public static void alterItemTypeScreen() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        public static void addItemTypeScreen() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        public static void deleteItemTypeScreen() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+    private void alterLocationScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void addLocationScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteLocationScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+        public static void alterOrderScreen() {
+//            OrderService os = new OrderService(con);
+//            ArrayList<Order> orderArr = os.getAll();
+//            int count = 1;
+//            for(Order o:orderArr){
+//                System.out.println(count + ":");
+//                System.out.println(count + "Order ID: " + o.getOrder_id());
+//                System.out.println("User ID" + o.getUser_id());
+//                System.out.println("Delivery Method: " + o.getDelivery_method_id());
+//                System.out.println("Delivery Status: " + o.getDelivery_status_id());
+//                System.out.println("Instructions: " + o.getInstuctions());
+//                System.out.println("Store ID: " + o.getStore_id());
+//                System.out.println("Time placed: " + o.getPlaced_timestamp());
+//                System.out.println("Tip: " + o.getTip());
+//                System.out.println();
+//                if (o.getCard_id() != null){
+//                    System.out.println("Card: " + o.getCard_id());
+//                }
+//                count ++;
+//            }        
+        }
+
+    private void addOrderScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteOrderScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void alterUserScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+        private static void alterUserStatusScreen() {
+            System.out.println("List of current user statuses");
+            UserStatusService uss = new UserStatusService(con);
+            ArrayList<UserStatus> usArr = uss.getAll();
+            int count = 1;
+            for(UserStatus us:usArr){
+                System.out.println(count + ". User Status ID: " + us.getUserStatusId() + " User Status: " + us.getUserStatus());
+                count ++;
+            }
+
+            System.out.println("\nSelect the user status you wish to alter.");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+            if (input - 1< usArr.size()){
+                UserStatus newUserStatus = usArr.get(input - 1);
+                System.out.println("Delivery Status ID Selected: " + newUserStatus.getUserStatusId());
+                System.out.println("Current delivery status: " + newUserStatus.getUserStatus());
+
+                System.out.println("Type in the new user status for this user status ID");
+                sc.nextLine();
+                String newUserStatusString = sc.nextLine();
+
+                newUserStatus.setUserStatus(newUserStatusString);
+                uss.update(newUserStatus);
+                System.out.println("User status updated.");
+
+            }else {
+                System.out.println("Invalid input.");
+            }
+        }
+
+        public static void addUserStatusScreen(){
+            System.out.println("List of current user statuses");
+            UserStatusService uss = new UserStatusService(con);
+            ArrayList<UserStatus> usArr = uss.getAll();
+            int count = 1;
+            for(UserStatus us:usArr){
+                System.out.println(count + ". User Status ID: " + us.getUserStatusId() + " User Status: " + us.getUserStatus());
+                count ++;
+            }
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Add a new user status ID that doesn't currently exist");
+            sc.nextLine();
+            String userStatusID = sc.nextLine();
+            System.out.println("Add a user status description");
+            sc.nextLine();
+            String userStatus = sc.nextLine();
+            try{
+            UserStatus us = new UserStatus(userStatusID, userStatus);
+            uss.add(us);
+            System.out.println("User added");
+            }
+            catch(IdException e){
+                e.getMessage();
+            }
+        }
+
+        public static void deleteUserStatusScreen() {
+            System.out.println("List of current user statuses");
+            UserStatusService uss = new UserStatusService(con);
+            ArrayList<UserStatus> usArr = uss.getAll();
+            int count = 1;
+            for(UserStatus us:usArr){
+                System.out.println(count + ". User Status ID: " + us.getUserStatusId() + " User Status: " + us.getUserStatus());
+                count ++;
+            }
+            
+            System.out.println("\n Select a userStatus to delete");
+            Scanner sc = new Scanner(System.in);
+            int input = sc.nextInt();
+            if((input - 1) < usArr.size()){
+                uss.deleteById(usArr.get(input - 1).getUserStatusId());
+                System.out.println("User Status deleted.");    
+            }
+            else{
+                System.out.println("Invalid input");
+            }
+        }
+
+    private void deleteOrderItemScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void addOrderItemScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void alterOrderItemScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
 }
