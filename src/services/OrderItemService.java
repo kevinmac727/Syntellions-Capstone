@@ -7,7 +7,10 @@ package services;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,17 +54,57 @@ public class OrderItemService implements Service<OrderItem>{
 
     @Override
     public void update(OrderItem orderItem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        String statement = "UPDATE order_items SET item_id = ? WHERE order_id = ?";
+        
+        try (PreparedStatement pStatement = con.prepareStatement(statement)) {
+            pStatement.setString(1, orderItem.getItemID());
+            pStatement.setString(2, orderItem.getOrderID());
+            pStatement.execute();
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    @Override
-    public OrderItem getById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public ArrayList<OrderItem> getItemsByOrderId(String id) {
+        try {
+            String statement = "SELECT * FROM order_items WHERE order_id = " + id;
+            Statement getOrderItemById = con.createStatement();
+            ResultSet rs = getOrderItemById.executeQuery(statement);
+            ArrayList<OrderItem> orderItems= new ArrayList<>();
+            while(rs.next()){
+                orderItems.add(new OrderItem(rs.getString(1), rs.getString(2)));
+            }
+            return orderItems;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public ArrayList<OrderItem> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<OrderItem> allOrderItems = new ArrayList<OrderItem>();
+        try{
+            Statement orderItemStatement = con.createStatement();
+            ResultSet orderItemsRS = orderItemStatement.executeQuery("Select * from order_items");
+            while(orderItemsRS.next()){
+                OrderItem orderItem = new OrderItem(
+                                            orderItemsRS.getString(1),
+                                            orderItemsRS.getString(2));
+                allOrderItems.add(orderItem);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return allOrderItems;
+    }
+
+    @Override
+    public OrderItem getById(String id) {
+        throw new UnsupportedOperationException("This method is not support in OrderItemService as an arraylist of items must be returned"); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
