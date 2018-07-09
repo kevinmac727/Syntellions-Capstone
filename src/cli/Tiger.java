@@ -432,11 +432,12 @@ public class Tiger{
     		if(input==6) homeScreen();
                 */
 	    //currentOrderScreen();
-	           System.out.println("Shouldn't be here");
-                   return -1;
+	           //System.out.println("Shouldn't be here");
+                   //return -1;
 	}
 
 	//TODO get item from item id here
+        
 	private static int viewEditOrderItems(Order order) {
 		System.out.println("*View Items*");
 		ArrayList<String> itemIds = currentOrder.getItem_ids();
