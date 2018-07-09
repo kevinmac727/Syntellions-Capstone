@@ -1,2 +1,13 @@
+<<<<<<< HEAD
+*.properties
+*.class
+.gitignore
+=======
 /build/
 /nbproject/private/
+*.xml
+*.properties
+*.class
+>>>>>>> master
+nbproject/project.properties
+build/classes/cli/AdminAndManager.class
