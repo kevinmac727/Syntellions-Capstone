@@ -10,6 +10,7 @@ import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
+import services.EmailService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -174,7 +175,34 @@ public class Tiger{
 
 	public static int homeScreen(){
             //Outside loop because it should only display on initial entry
-            System.out.println("Welcome " + currentUser.getFirstName());
+            System.out.println("Welcome " + currentUser.getFirstName() + "!");
+            
+            if(currentUser.getUserStatusId().equals("0"))
+             {
+                System.out.println("We kindly ask that you verify your email before continuing forward!");
+                System.out.println("An email will be sent shortly...\n");
+                String verifyInput;
+                String verifyCode = (Double.toString(Math.random()*10000)).substring(0, 4);
+                EmailService.sendEmail(currentUser.getEmail(), verifyCode);
+                while(currentUser.getUserStatusId().equals("0"))
+                {
+                    System.out.println("Please verify your email address.");
+                    System.out.println("Submit the code found in the email below: ");
+                    verifyInput = sc.next();
+                    if(verifyInput.equals(verifyCode))
+                    { 
+                        currentUser.setUserStatusId("1");
+                        UserService us = new UserService(con);
+                        us.update(currentUser);
+                        System.out.println("Thank you for verifying your email address!");
+                    }
+                    else
+                    {
+                        System.out.println("Something went wrong!");
+                        System.out.println("Please try verifying your email address again.\n");
+                    }
+                }
+            }
             
             //Default value to enter loop
 	    int input =  -1;
@@ -432,11 +460,12 @@ public class Tiger{
     		if(input==6) homeScreen();
                 */
 	    //currentOrderScreen();
-	           System.out.println("Shouldn't be here");
-                   return -1;
+	           //System.out.println("Shouldn't be here");
+                   //return -1;
 	}
 
 	//TODO get item from item id here
+        
 	private static int viewEditOrderItems(Order order) {
 		System.out.println("*View Items*");
 		ArrayList<String> itemIds = currentOrder.getItem_ids();

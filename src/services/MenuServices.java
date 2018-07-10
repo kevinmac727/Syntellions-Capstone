@@ -39,8 +39,11 @@ public class MenuServices implements Service<Menu> {
 					rs.getString("description"), 
 					rs.getString("time_slot_id"), 
 					rs.getString("photo"), 
-					rs.getFloat("price"));
-			
+			 		rs.getFloat("price"));
+                        
+                //Solved the error about adding too much quantity
+			rs.close();
+                        preparedStatement.close();
 			return men;
 			
 		} catch (SQLException e) {
@@ -62,9 +65,10 @@ public class MenuServices implements Service<Menu> {
 				float price = rs.getFloat("price");
 				String tid = rs.getString("time_slot_id");
 				String tName = getTimeName(times, tid);
-				Menu men = new Menu(rs.getString("item_id"), rs.getString("name"), rs.getString("vegetarian").charAt(0), 
-						rs.getString("item_type_id"), rs.getString("description"), tName, 
-						rs.getString("photo"), price);
+				Menu men = new Menu(rs.getString("item_id"), rs.getString("name"),
+                                rs.getString("vegetarian").charAt(0), 
+				rs.getString("item_type_id"), rs.getString("description"), tName, 
+				rs.getString("photo"), price);
 				menArr.add(men);
 			}
 			return menArr;
@@ -79,11 +83,13 @@ public class MenuServices implements Service<Menu> {
 	}
 	
 	
+        @Override
 	public boolean add(Menu men){		
 		try{
 								
 			//con.setAutoCommit(false);
-			PreparedStatement preStmt = con.prepareStatement("insert into items values(?,?,?,?,?,?,?,?)");
+			PreparedStatement preStmt = con.prepareStatement
+                        ("insert into items values(?,?,?,?,?,?,?,?)");
 			preStmt.setString(1, men.getId());
 			preStmt.setString(2, men.getName());
 			preStmt.setString(3, ("" + men.getVegetarian()));
@@ -102,6 +108,7 @@ public class MenuServices implements Service<Menu> {
 		return false;
 	}
 	
+        @Override
 	public void deleteById(String id){
 		try {
 			con.createStatement().executeQuery("DELETE FROM items WHERE item_id = " + id);
@@ -116,7 +123,10 @@ public class MenuServices implements Service<Menu> {
 		ArrayList<TimeSlots> times = timServ.getAll();
 		String timeId = getTimeID(times, men.getSlot_ID());
 		try {
-			PreparedStatement preStmt = con.prepareStatement("UPDATE items SET name=?, vegetarian=?, item_type_id=?, description=?, time_slot_id=?, photo=?, price=? WHERE item_id=?");
+			PreparedStatement preStmt = 
+                        con.prepareStatement("UPDATE items SET name=?, vegetarian=?, "
+                                + "item_type_id=?, description=?, time_slot_id=?, "
+                                + "photo=?, price=? WHERE item_id=?");
 			preStmt.setString(1, men.getName());
 			preStmt.setString(2, ("" + men.getVegetarian()));
 			preStmt.setString(3, men.getType());
@@ -141,9 +151,10 @@ public class MenuServices implements Service<Menu> {
 				float price = rs.getFloat("price");
 				String tid = rs.getString("time_slot_id");
 				String tName = getTimeName(times, tid);
-				Menu men = new Menu(rs.getString("item_id"), rs.getString("name"), rs.getString("vegetarian").charAt(0), 
-						rs.getString("item_type_id"), rs.getString("description"), tName, 
-						rs.getString("photo"), price);
+				Menu men = new Menu(rs.getString("item_id"),
+                                        rs.getString("name"), rs.getString("vegetarian").charAt(0), 
+					rs.getString("item_type_id"), rs.getString("description"), tName, 
+					rs.getString("photo"), price);
 				menArr.add(men);
 			}
 			return menArr;
