@@ -14,3 +14,5 @@ build/classes/cli/AdminAndManager.class
 nbproject/private/private.properties
 nbproject/project.properties
 nbproject/private/private.properties
+*.class
+*.properties
