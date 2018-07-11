@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 
 import domain.*;
+import static java.lang.System.in;
+import static java.lang.reflect.Array.get;
+import java.util.HashMap;
 
 
 import services.MenuServices;
@@ -18,9 +21,7 @@ import services.UserService;
 public class ServiceWrapper {
 	
 	Connection con;
-	
-	
-	
+    
 	public ServiceWrapper(Connection con) {
 		super();
 		this.con = con;
@@ -40,7 +41,7 @@ public class ServiceWrapper {
 		//, String street, String city, String state, String country, String zip, String userStatus
 		boolean result = false;
 		String userId = Double.toString(Math.random()* 10001);
-		String userStatusId = "1";
+		String userStatusId = "0";
 
 		User user = new User(userId,firstName,lastName,phone, email,password,userStatusId);
 		UserService us = new UserService(con);
@@ -59,13 +60,56 @@ public class ServiceWrapper {
 	}
 	
 	public static void printMenuItems(ArrayList<Menu> menus){
+         
 		int count = 0;
 		for(Menu menu: menus){
 			count++;
-			System.out.println(count + ". $" + menu.getPrice() + " " + menu.getName());
+			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
+<<<<<<< HEAD
 		System.out.println(++count + ". [Done]");
+=======
+                // we dont need count
+		System.out.println( ++count + ". Go Back");
+>>>>>>> master
 	}
+        
+        
+        public static void printOrderItems(ArrayList<Menu> menus){
+          // how can i get the id  Menu.getId()?  
+        HashMap<Menu, Integer> mapCount = new HashMap<> ();
+
+        for(Menu menu: menus){
+
+            int count;
+            if ( mapCount.containsKey(menu)){
+                count = mapCount.get(menu) ;
+                mapCount.put(menu, count+1);
+
+            } else {
+
+            count = 1;
+            mapCount.put(menu, count);
+
+              }
+        }
+        int x = 1;
+          //for (int i = 1; i<= mapCount.size(); i++ ){
+         for ( Menu key :mapCount.keySet() ){
+
+             int value = mapCount.get(key);
+
+                System.out.println( x++ + "   "+ value + "  * $" + key.getPrice() + " " + key.getName());
+
+            //}
+        }
+       // we dont need count
+        System.out.println(x++ + " Go Back");
+        System.out.println( " Enter the number that you would like to edit: ");
+        
+        
+    }
+        
 
 	public static void printOrders(ArrayList<Order> orders){
 		int count = 0;

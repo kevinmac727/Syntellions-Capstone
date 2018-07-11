@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import domain.Order;
+import java.sql.Types;
 
 public class OrderService implements Service<Order>{
 	/*
@@ -64,6 +65,43 @@ public class OrderService implements Service<Order>{
 		}	
 	}
 	
+        public String addOrderAutoIncrement(Order order){
+		try{
+			//Add order items
+			CallableStatement statement = connection.prepareCall(
+					"{?=call AddOrder(?,?,?,?,?,?,?,?,?,?)}");
+			
+			statement.registerOutParameter(1, Types.VARCHAR);
+			statement.setString("USER_ID",order.getUser_id());
+			statement.setFloat("TIP",order.getTip());
+			statement.setFloat("TOTAL_PRICE",order.getTotal_price());
+			statement.setInt("PLACED_TIMESTAMP",order.getPlaced_timestamp());
+			statement.setInt("DELIVERY_TIMESTAMP",order.getDelivery_timestamp());
+			statement.setString("CARD_ID",order.getCard_id());
+			statement.setString("INSTRUCTIONS",order.getInstuctions());
+			statement.setString("DELIVERY_METHOD_ID",order.getDelivery_method_id());
+			statement.setString("STORE_ID",order.getStore_id());
+			statement.setString("DELIVERY_STATUS_ID",order.getDelivery_status_id());
+			statement.execute();
+                        String orderID = statement.getString(1);
+			statement.close();
+                        order.setOrder_id(orderID);
+			//Add all items in order to order_items
+			ArrayList<String> item_ids = order.getItem_ids();
+			for (String item_id: item_ids){
+				statement = connection.prepareCall(
+						"{call AddOrderItem(?,?)}");
+				statement.setString(1, order.getOrder_id());
+				statement.setString(2, item_id);
+				statement.execute();
+				statement.close();
+			}
+			return orderID;
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			return null;
+		}	
+	}
 	@Override
 	public void deleteById(String id){
 		try{
@@ -219,14 +257,16 @@ public class OrderService implements Service<Order>{
 		try{
 			//Get Order
 			Statement statement = connection.createStatement();
-			ResultSet resultSetOrders = statement.executeQuery("SELECT * FROM ORDERS WHERE USER_ID = '" + userId + "'");
+			ResultSet resultSetOrders = statement.executeQuery
+                       ("SELECT * FROM ORDERS WHERE USER_ID = '" + userId + "'");
 			
 			ResultSet resultSetItems;
 			while(resultSetOrders.next()){
 				//fetch all order items
 				statement = connection.createStatement();
 				resultSetItems = statement.executeQuery(
-						"SELECT * FROM ORDER_ITEMS WHERE ORDER_ID = " + resultSetOrders.getString("ORDER_ID"));
+						"SELECT * FROM ORDER_ITEMS WHERE ORDER_ID = "
+                                                        + resultSetOrders.getString("ORDER_ID"));
 				order_items.clear();
 				while(resultSetItems.next()){
 					order_items.add(resultSetItems.getString("ITEM_ID"));

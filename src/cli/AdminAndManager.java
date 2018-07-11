@@ -22,6 +22,8 @@ import services.DeliveryStatusService;
 import services.ItemType;
 import services.ItemTypeService;
 import services.MenuServices;
+import services.OrderItem;
+import services.OrderItemService;
 import services.OrderService;
 import services.StoreService;
 import services.UserService;
@@ -169,19 +171,21 @@ public class AdminAndManager {
                             }
                             break;
                     case 8:
-                            option = optionsScreen("Order Item");
+                    {        
+                            System.out.println("How would you like to modify Order Items");
+                            System.out.println("1. Add");
+                            System.out.println("2. Delete");
+                            
+                            option = sc.nextInt();
                             switch(option){
                                 case 1:
-                                    alterOrderItemScreen();
-                                    break;
-                                case 2:
                                     addOrderItemScreen();
                                     break;
-                                case 3:
+                                case 2:
                                     deleteOrderItemScreen();
                                     break;                           
-                                          
                             }
+                    }
                             break;
                     case 9:
                     {
@@ -750,15 +754,54 @@ public class AdminAndManager {
         }
 
     private void deleteOrderItemScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("List of current orders and their items");
+        OrderItemService ois = new OrderItemService(con);
+        ArrayList<OrderItem> oiArr = ois.getAll();
+        int count = 1;
+        for(OrderItem oi:oiArr){
+            System.out.println(count + ". Order ID: " + oi.getOrderID() + " Item ID: " + oi.getItemID());
+            count ++;
+        }
+        
+        System.out.println("\nSelect 1 if you wish to delete all items for an order ID.");
+        System.out.println("Select 2 if you wish to delete all of one type of item for all order IDs");
+        System.out.println("Select any other number to exit");
+        Scanner sc = new Scanner(System.in);
+        int input;
+        
+        input = sc.nextInt();
+        while(input != 1 || input != 2){
+            if(input == 1){
+                System.out.println("Select the order ID you wish to delete all items for");
+                String orderIDToDelete = sc.next();
+                ois.deleteById(orderIDToDelete);
+                System.out.println("This order ID has been deleted");
+            }else if(input == 2){
+                System.out.println("Select the item ID you wish to delete from all orders");
+                String itemIDToDelete = sc.next();
+                ois.deleteItemById(itemIDToDelete);
+                System.out.println("This item ID has been deleted");
+            }
+        }
     }
 
     private void addOrderItemScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void alterOrderItemScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("List of current order ids and their respective item ids");
+        OrderItemService ois = new OrderItemService(con);
+        ArrayList<OrderItem> oiArr = ois.getAll();
+        int count = 1;
+        for(OrderItem oi:oiArr){
+            System.out.println(count + ". Order ID: " + oi.getOrderID() + " Item ID: " + oi.getItemID());
+            count ++;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select an order ID(should be existing one) to add to the table");
+        String orderID = sc.next();
+        System.out.println("Select an item ID to add to the table(must be existing item ID)");
+        String itemID = sc.next();
+        OrderItem newOrderItem = new OrderItem(orderID, itemID);
+        ois.add(newOrderItem);
+        System.out.println("Item has been added");
     }
 
 

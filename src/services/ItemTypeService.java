@@ -21,7 +21,8 @@ public class ItemTypeService implements Service<ItemType>{
     @Override
     public void deleteById(String id) {
         try{
-            try (PreparedStatement pStatement = connection.prepareStatement("DELETE FROM item_types WHERE item_type_id = ?")) {
+            try (PreparedStatement pStatement = connection.prepareStatement
+        ("DELETE FROM item_types WHERE item_type_id = ?")) {
                 pStatement.setString(1, id);
                 pStatement.execute();
             }
@@ -66,7 +67,8 @@ public class ItemTypeService implements Service<ItemType>{
         ItemType itemType = null;
         try{
             Statement statement = connection.createStatement();
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM ITEM_TYPES WHERE item_type_id = " + id)) {
+            try (ResultSet resultSet = statement.executeQuery
+        ("SELECT * FROM ITEM_TYPES WHERE item_type_id = " + id)) {
                 resultSet.next();
                 itemType = new ItemType(resultSet.getString(1), resultSet.getString(2));
             }

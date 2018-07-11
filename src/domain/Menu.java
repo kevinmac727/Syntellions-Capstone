@@ -90,8 +90,10 @@ public class Menu {
 
 	@Override
 	public String toString() {
-		return "Menu [id=" + id + ", name=" + name + ", vegetarian=" + vegetarian + ", description=" + description
-				+ ", type=" + type + ", slot_ID=" + slot_ID + ", photo=" + photo + ", price=" + price + "]";
+		return "Menu [id=" + id + ", name=" + name + ", vegetarian=" 
+                       + vegetarian + ", description=" + description
+	               + ", type=" + type + ", slot_ID=" + slot_ID 
+                       + ", photo=" + photo + ", price=" + price + "]";
 	}
 
 
