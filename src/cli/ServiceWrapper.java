@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 
 import domain.*;
+import java.util.HashMap;
 
 
 import services.MenuServices;
@@ -59,13 +60,47 @@ public class ServiceWrapper {
 	}
 	
 	public static void printMenuItems(ArrayList<Menu> menus){
+         
 		int count = 0;
 		for(Menu menu: menus){
 			count++;
-			System.out.println(count + ". $" + menu.getPrice() + " " + menu.getName());
+			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
-		System.out.println(++count + ". Go Back");
+                // we dont need count
+		System.out.println( ++count + ". Go Back");
 	}
+        	public static void printOrderItems(ArrayList<Menu> menus){
+                  // how can i get the id  Menu.getId()?  
+                HashMap<Menu, Integer> mapCount = new HashMap<> ();
+		
+		for(Menu menu: menus){
+                 
+                    int count;
+                    if ( mapCount.containsKey(menu)){
+                        count = mapCount.get(menu) ;
+                        mapCount.put(menu, count+1);
+
+                    } else {
+
+                    count = 1;
+                    mapCount.put(menu, count);
+
+                      }
+                }
+                int x = 1;
+                  //for (int i = 1; i<= mapCount.size(); i++ ){
+                 for ( Menu key :mapCount.keySet() ){
+                   
+                     int value = mapCount.get(key);
+                         
+			System.out.println( x++ + "   "+ value + "  * $" + key.getPrice() + " " + key.getName());
+                        
+                    //}
+		}
+               // we dont need count
+		System.out.println(x++ + " Go Back");
+	}
+        
 
 	public static void printOrders(ArrayList<Order> orders){
 		int count = 0;
