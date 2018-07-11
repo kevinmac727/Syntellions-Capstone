@@ -31,22 +31,38 @@ public class OrderService implements Service<Order>{
 		try{
 			//Add order items
 			CallableStatement statement = connection.prepareCall(
-					"{call AddOrder(?,?,?,?,?,?,?,?,?,?,?)}");
-			
-			statement.setString("ORDER_ID",order.getOrder_id());
-			statement.setString("USER_ID",order.getUser_id());
-			statement.setFloat("TIP",order.getTip());
-			statement.setFloat("TOTAL_PRICE",order.getTotal_price());
-			statement.setInt("PLACED_TIMESTAMP",order.getPlaced_timestamp());
-			statement.setInt("DELIVERY_TIMESTAMP",order.getDelivery_timestamp());
-			statement.setString("CARD_ID",order.getCard_id());
-			statement.setString("INSTRUCTIONS",order.getInstuctions());
-			statement.setString("DELIVERY_METHOD_ID",order.getDelivery_method_id());
-			statement.setString("STORE_ID",order.getStore_id());
-			statement.setString("DELIVERY_STATUS_ID",order.getDelivery_status_id());
+					"{call AddOrder(?, ?, ?, ?, ?, ?, "
+                                                + "?, ?, ?, ?, ?)}");
+                        
+			statement.setString(1, order.getOrder_id());
+			statement.setString(2,order.getUser_id());
+			statement.setFloat(3,order.getTip());
+			statement.setFloat(4,order.getTotal_price());
+			statement.setInt(5,order.getPlaced_timestamp());
+			statement.setInt(6,order.getDelivery_timestamp());
+			statement.setString(7,order.getCard_id());
+			statement.setString(8,order.getInstuctions());
+			statement.setString(9,order.getDelivery_method_id());
+			statement.setString(10,order.getStore_id());
+			statement.setString(11,order.getDelivery_status_id());
 			statement.execute();
 			statement.close();
-			
+                        
+                        /*
+			statement.setString("OrderID",order.getOrder_id());
+			statement.setString("UserID",order.getUser_id());
+			statement.setFloat("Tip",order.getTip());
+			statement.setFloat("TotalPrice",order.getTotal_price());
+			statement.setInt("PlacedTimestamp",order.getPlaced_timestamp());
+			statement.setInt("DeliveryTimestamp",order.getDelivery_timestamp());
+			statement.setString("CardID","0");//order.getCard_id());
+			statement.setString("Intructions",order.getInstuctions());
+			statement.setString("DeliveryMethodID",order.getDelivery_method_id());
+			statement.setString("StoreID",order.getStore_id());
+			statement.setString("DeliveryStatusID",order.getDelivery_status_id());
+			statement.execute();
+			statement.close();
+			*/
 			//Add all items in order to order_items
 			ArrayList<String> item_ids = order.getItem_ids();
 			for (String item_id: item_ids){

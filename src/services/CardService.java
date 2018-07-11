@@ -87,6 +87,7 @@ public class CardService implements Service<Card>{
 						); 
 				cards.add(card);
 			}
+                        cardsRs.close();
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}

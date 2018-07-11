@@ -1,5 +1,6 @@
 package cli;
 
+import domain.Card;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
+import services.CardService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -608,10 +610,61 @@ public class Tiger{
                 
 	}
 
-	private static void editCards() 
+	private static int editCards() 
         {
-		
-		
+            //Fetch cards that the user has
+            CardService cs = new CardService(con);
+            ArrayList<Card> cards = cs.getUserCards(currentUser.getUserId());
+            
+            Integer input = -1;
+            while(input < 1 && input > cards.size() + 1)
+            {
+            System.out.println("Please select the card to edit");
+            
+            for (int i = 0; i < cards.size(); i++) {
+                System.out.println( (i + 1) + cards.get(i).getCardNumber());
+            }
+            System.out.println((cards.size() + 1) + "Go Back");
+            
+            input = sc.nextInt();
+            sc.nextLine();//flush input buffer
+            }
+            if (input == cards.size() + 1) {
+                //"Go back" selected, return out
+                return -1;
+            }
+            Card chosen = cards.get(input - 1);
+            String cardID;
+            String userID = currentUser.getUserId();
+            String cardNumber;
+            String expiryCode;
+            String ccv;
+            
+            while(true)
+            {
+                
+                
+                
+                System.out.println("Please enter new card number");
+                input = sc.nextInt();
+                sc.nextLine(); //Just ensuring input buffer gets flushed
+                String inString = input.toString();
+                if (inString.length() != 16) {
+                    System.out.println("Invalid card input, please try again");
+                }
+                else
+                {
+                    cardNumber = inString;
+                    break;
+                }
+            }
+            System.out.println("Please enter expiry date");
+            expiryCode = sc.nextLine();
+            System.out.println("Please enter security code");
+            ccv = sc.nextLine();
+            
+            //Call SQL statement to update card?
+            
 	}
 
 	private static String editString() 
@@ -628,6 +681,7 @@ public class Tiger{
 		ArrayList<Order> orders = os.getUserOrders(currentUser.getUserId());
 		ServiceWrapper.printOrders(orders);
 	    int input = sc.nextInt();
+            
 	    if(input==orders.size()) return -1;//homeScreen();
 	    else oldOrderScreen(orders.get(input));
             
