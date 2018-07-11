@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import domain.User;
+import java.sql.Types;
 
 public class UserService implements Service<User>{
 	
@@ -46,6 +47,36 @@ public class UserService implements Service<User>{
 			return false;
 		}	
 	}
+        
+	public String addUserAutoIncrement(User user){
+		try{
+			
+			String userId = user.getUserId();
+			String firstName = user.getFirstName();
+			String lastName = user.getLastName();
+			String phone = user.getPhone();
+			String email = user.getEmail();
+			String password = user.getPassword();
+			String userStatusId = user.getUserStatusId();
+			
+			CallableStatement oCSF = connection.prepareCall("{?=call sp_insert_user(?,?,?,?,?,?)}");
+			oCSF.registerOutParameter(1, Types.VARCHAR);
+			oCSF.setString(2, firstName);
+			oCSF.setString(3, lastName);
+			oCSF.setString(4, phone);
+			oCSF.setString(5, email);
+			oCSF.setString(6, password);
+			oCSF.setString(7, userStatusId);
+			
+			oCSF.executeUpdate();
+                        String userID = oCSF.getString(1);
+			oCSF.close();
+			return userID;
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			return null;
+		}	
+	}       
 	public void deleteById(String id){
 		try{
 			Statement usersSt = connection.createStatement();

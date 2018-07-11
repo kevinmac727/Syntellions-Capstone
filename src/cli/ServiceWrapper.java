@@ -41,7 +41,7 @@ public class ServiceWrapper {
 		//, String street, String city, String state, String country, String zip, String userStatus
 		boolean result = false;
 		String userId = Double.toString(Math.random()* 10001);
-		String userStatusId = "1";
+		String userStatusId = "0";
 
 		User user = new User(userId,firstName,lastName,phone, email,password,userStatusId);
 		UserService us = new UserService(con);
