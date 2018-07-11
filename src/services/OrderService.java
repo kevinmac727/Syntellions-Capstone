@@ -257,14 +257,16 @@ public class OrderService implements Service<Order>{
 		try{
 			//Get Order
 			Statement statement = connection.createStatement();
-			ResultSet resultSetOrders = statement.executeQuery("SELECT * FROM ORDERS WHERE USER_ID = '" + userId + "'");
+			ResultSet resultSetOrders = statement.executeQuery
+                       ("SELECT * FROM ORDERS WHERE USER_ID = '" + userId + "'");
 			
 			ResultSet resultSetItems;
 			while(resultSetOrders.next()){
 				//fetch all order items
 				statement = connection.createStatement();
 				resultSetItems = statement.executeQuery(
-						"SELECT * FROM ORDER_ITEMS WHERE ORDER_ID = " + resultSetOrders.getString("ORDER_ID"));
+						"SELECT * FROM ORDER_ITEMS WHERE ORDER_ID = "
+                                                        + resultSetOrders.getString("ORDER_ID"));
 				order_items.clear();
 				while(resultSetItems.next()){
 					order_items.add(resultSetItems.getString("ITEM_ID"));

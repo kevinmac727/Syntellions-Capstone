@@ -122,7 +122,9 @@ public class OrderItemService implements Service<OrderItem>{
 
     @Override
     public OrderItem getById(String id) {
-        throw new UnsupportedOperationException("This method is not support in OrderItemService as an arraylist of items must be returned"); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException
+        ("This method is not support in OrderItemService as an arraylist of items must be returned"); 
+//To change body of generated methods, choose Tools | Templates.
     }
     
 }
