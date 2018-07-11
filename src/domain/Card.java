@@ -63,6 +63,10 @@ public class Card {
 		return "Card [cardId=" + cardId + ", userId=" + userId + ", cardNumber=" + cardNumber + ", expiryDate="
 				+ expiryDate + ", securityCode=" + securityCode + "]";
 	}
+
+    public void setNameOnCard(String cardName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 	
 	

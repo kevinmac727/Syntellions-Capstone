@@ -21,8 +21,10 @@ public class Order {
 
 	
 	
-	public Order(String order_id, String user_id, float tip, float total_price, int placed_timestamp,
-			int delivery_timestamp, String card_id, String instuctions, String delivery_method_id, String store_id,
+	public Order(String order_id, String user_id, float tip, 
+                float total_price, int placed_timestamp,
+			int delivery_timestamp, String card_id, 
+                        String instuctions, String delivery_method_id, String store_id,
 			String delivery_status_id, ArrayList<String> item_ids) {
 		super();
 		this.order_id = order_id;
@@ -144,10 +146,10 @@ public class Order {
 	@Override
 	public String toString() {
 		return "Order [order_id=" + order_id + ", user_id=" + user_id + ", tip=" + tip + ", total_price=" + total_price
-				+ ", placed_timestamp=" + placed_timestamp + ", delivery_timestamp=" + delivery_timestamp + ", card_id="
-				+ card_id + ", instuctions=" + instuctions + ", delivery_method_id=" + delivery_method_id
-				+ ", store_id=" + store_id + ", delivery_status_id=" + delivery_status_id + ", item_ids=" + item_ids
-				+ "]";
+                + ", placed_timestamp=" + placed_timestamp + ", delivery_timestamp=" + delivery_timestamp + ", card_id="
+                + card_id + ", instuctions=" + instuctions + ", delivery_method_id=" + delivery_method_id
+                + ", store_id=" + store_id + ", delivery_status_id=" + delivery_status_id + ", item_ids=" + item_ids
+                + "]";
 	}
 
 	
