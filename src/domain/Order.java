@@ -151,14 +151,11 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [order_id=" + order_id + ", user_id=" + user_id + ", tip=" + tip + ", total_price=" + total_price
-				+ ", placed_timestamp=" + placed_timestamp + ", delivery_timestamp=" + delivery_timestamp + ", card_id="
-				+ card_id + ", instuctions=" + instuctions + ", delivery_method_id=" + delivery_method_id
-				+ ", store_id=" + store_id + ", delivery_status_id=" + delivery_status_id + ", item_ids=" + item_ids
-				+ "]";
+            return "Order [order_id=" + order_id + ", user_id=" + user_id + ", tip=" + tip + ", total_price=" + total_price
+                + ", placed_timestamp=" + placed_timestamp + ", delivery_timestamp=" + delivery_timestamp + ", card_id="
+                + card_id + ", instuctions=" + instuctions + ", delivery_method_id=" + delivery_method_id
+                + ", store_id=" + store_id + ", delivery_status_id=" + delivery_status_id + ", item_ids=" + item_ids
+                + "]";
 	}
-
-	
-
 	
 }

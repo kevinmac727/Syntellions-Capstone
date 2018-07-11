@@ -36,6 +36,24 @@ public class OrderItemService implements Service<OrderItem>{
             Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void deleteItemById(String id){
+
+
+        
+        try (PreparedStatement pStmt = con.prepareStatement("DELETE FROM order_items WHERE item_id = ?")) {
+            pStmt.setString(1, id);
+            pStmt.execute();
+            System.out.println("Item ID: " + id + " has been deleted");
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+            
+
+                
+    }
 
     @Override
     public boolean add(OrderItem orderItem) {
@@ -70,7 +88,7 @@ public class OrderItemService implements Service<OrderItem>{
 
     public ArrayList<OrderItem> getItemsByOrderId(String id) {
         try {
-            String statement = "SELECT * FROM order_items WHERE order_id = " + id;
+            String statement = "SELECT * FROM order_items WHERE order_id = " + id + " ORDER BY order_id";
             Statement getOrderItemById = con.createStatement();
             ResultSet rs = getOrderItemById.executeQuery(statement);
             ArrayList<OrderItem> orderItems= new ArrayList<>();
@@ -104,7 +122,9 @@ public class OrderItemService implements Service<OrderItem>{
 
     @Override
     public OrderItem getById(String id) {
-        throw new UnsupportedOperationException("This method is not support in OrderItemService as an arraylist of items must be returned"); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException
+        ("This method is not support in OrderItemService as an arraylist of items must be returned"); 
+//To change body of generated methods, choose Tools | Templates.
     }
     
 }

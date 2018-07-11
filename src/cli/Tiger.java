@@ -468,14 +468,23 @@ public class Tiger{
         
 	private static int viewEditOrderItems(Order order) {
 		System.out.println("*View Items*");
+                
 		ArrayList<String> itemIds = currentOrder.getItem_ids();
+                
 		ArrayList<Menu> items = sw.getMenuItems(itemIds);
 		if(items.isEmpty()) System.out.println("No items");
-		ServiceWrapper.printMenuItems(items);
-	    int input = sc.nextInt();
-	    if(input==items.size()) return 0;//homeScreen();
-	    else if(input==items.size()+1) return -1;//currentOrderScreen();
-	    else orderItemScreen(items.get(input));
+		//ServiceWrapper.printMenuItems(items);
+                 ServiceWrapper.printOrderItems(items);
+                 
+                // ServiceWrapper.editOrderItems(items);
+
+                
+                //System.out.println( " Go Back");
+                
+                int input = sc.nextInt();
+                if(input==items.size()) return 0;//homeScreen();
+                else if(input==items.size()+1) return -1;//currentOrderScreen();
+                else orderItemScreen(items.get(input));
             
             //Test, unsure if proper
             return -1;
