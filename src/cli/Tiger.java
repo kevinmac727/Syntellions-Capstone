@@ -1,5 +1,6 @@
 package cli;
 
+import domain.Card;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -10,6 +11,11 @@ import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import services.CardService;
+import services.DeliveryMethod;
+import services.DeliveryMethodService;
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -64,6 +70,11 @@ public class Tiger{
 	    
                 input = sc.nextInt();
             
+                //continue asking for the input until the user enters a valid one
+                while(input  > 3){
+                    System.out.println("Invalid Menu Select. try again ");
+                    input = sc.nextInt();
+                }//while Ends 
                 switch(input){
                     case 1:
     			input = loginScreen();
@@ -180,7 +191,7 @@ public class Tiger{
 	    int input =  -1;
             
             //Loops while input isn't valid
-            while(input == -1 || input == 0)
+            while(input != 6)
             {
                 
 		System.out.println("\n*Home*");
@@ -199,11 +210,16 @@ public class Tiger{
               
             
                 input = sc.nextInt();
+                //continue asking for the input until the user enters a valid one
+                while(input  > 6){
+                    System.out.println("Invalid Menu Select. try again ");
+                    input = sc.nextInt();
+                }//while Ends 
                 //Switch on user input
                 switch(input)
                 {
                     case 1:
-                        input = menuScreen();
+                        menuScreen();
                         break;
                     case 2:
                         input = currentOrderScreen();
@@ -227,56 +243,191 @@ public class Tiger{
                         //No valid selection was made, loop back until input is valid
                         input = -1;
                 }
-                //Previous code
-                /*
-		if(input==1) menuScreen();
-		if(input==2) currentOrderScreen();    	
-		if(input==3) accountScreen();
-		if(input==4) storeDetailsScreen();   	
-		if(input==5) firstScreen();
-		if(input==6) {
-			System.out.println("Goodbye");
-    		System.exit(0);
-                }
-                */
+
             }
-            System.out.println("Shouldn't be here");
+            //System.out.println("Shouldn't be here");
             return -1;
 	}
 	
-	public static int menuScreen(){
-		System.out.println("\n*Menu*");
-		MenuServices ms = new MenuServices(con);
-		ArrayList<Menu> menus = ms.getAll();
-		ServiceWrapper.printMenuItems(menus);
-	    int input = sc.nextInt();
-	    if(input==menus.size()+1) return 0;//homeScreen();
-	    else menuItemScreen(menus.get(input-1));
-            //Test, unsure if this is proper
-            return -1;
-	}
-	public static int menuItemScreen(Menu menu){
-		System.out.println("\n*" + menu.getName() + "*");
-		System.out.println(menu.getDescription());
-		System.out.println("$" + menu.getPrice());
-		System.out.println("1. Enter Quantity");
-		System.out.println("2. Go Back");
+	public static void menuScreen(){
+            MenuServices ms = new MenuServices(con);
+            ArrayList<Menu> menus = ms.getAll();
+            int input = 0; 
+            
+            while(input != -1){
+                System.out.println("\n*Menu*");
+                ServiceWrapper.printMenuItems(menus);
+                input = sc.nextInt();
+	    
+                if(input==menus.size()+1) break;//homeScreen();
+                else menuItemScreen(menus.get(input-1));
+                //Test, unsure if this is proper
+            }//while Ends 
+            
+            //collect additional information about the data
+            collectOrderInfoScreen();
+            
+	}//menuScreen() Ends 
+        
+	public static void menuItemScreen(Menu menu){
+            System.out.println("\n*" + menu.getName() + "*");
+            System.out.println(menu.getDescription());
+	    System.out.println("$" + menu.getPrice());
+	    System.out.println("1. Enter Quantity");
+	    System.out.println("2. Go back");
 	    int input = sc.nextInt();
 	    if(input==1) itemQuantityScreen(menu);
-	    else if(input==2) menuScreen();
-            
+            else return; 
             //Test, unsure if this is proper
-            return -1;
 	}
+        
 	//TODO finish this
-	public static int itemQuantityScreen(Menu menu){
-		System.out.println("Enter Quantity");
+	public static void itemQuantityScreen(Menu menu){
+		System.out.println("Enter Quantity: ");
 	    int input = sc.nextInt();
 	    for(int i=0;i<input;i++) currentOrder.addItem_id(menu.getId());
 		System.out.println("Item(s) added");
-		//menuScreen();
-                return -1;
+	
 	}
+        
+        
+        public static void collectOrderInfoScreen(){
+            
+            Scanner scanInput = new Scanner(System.in);
+            String menuSelection = "";
+            
+            System.out.println("|--------Order summary--------|"); 
+            
+            System.out.println("|------Order Information-------|");
+            
+            System.out.println("\nEnter Delivery date (MM-DD-YYYY): ");
+            
+            System.out.println("\nEnter Delivery time (HH:MM): "); 
+            
+            /**Display methods of delivery  for the user to choose from*/
+            System.out.println("\nSelect Delivery method"); 
+            showDeliverMethods();
+            menuSelection =scanInput.next();
+            menuSelection = menuSelection.trim();
+            
+            //ensure that user enters the correct input
+            while(menuSelectionIsValid(menuSelection,'3') == false ){
+                System.out.println("**INVALID MENU SELECTION**\nSelect Delivery method: ");
+                 menuSelection = scanInput.next();
+                 menuSelection = menuSelection.trim();
+            }//while Ends 
+             
+            /**Enter delivery instruction***/ 
+            System.out.println("\nEnter Delivery Instruction: "); 
+            currentOrder.setInstuctions(new Scanner(System.in).nextLine());
+            
+            
+            /**Process user's payment**/
+            System.out.println("Select Method of Payment");
+            System.out.println("1. Cash");
+            System.out.println("2. Credit/Debit");
+            menuSelection = scanInput.next();
+            
+            while(menuSelectionIsValid(menuSelection, '2') == false){
+               System.out.println("**INVALID SELECTION**\n"
+                       + "Please enter [1] for Cash or [2] for Credit/Debit:");
+               menuSelection = scanInput.next();
+            }//while Ends 
+            
+            //ask for credit card information
+            if(menuSelection.equals("2")){
+                
+                //Ask user if he/she wants to use existing cards on file 
+                System.out.println("Do you want to use an existing card ?\n Enter [y] for YES or [N] for NO: ");
+                menuSelection = scanInput.next(); 
+                
+                boolean usingExistingCard = false; 
+                if(menuSelection.equalsIgnoreCase("y")){
+                    //Check if the user has a card in the data base: 
+                    //Print out a list of all the user's card and ask them to select one 
+                    CardService cardSvc = new CardService(con); 
+                    ArrayList<Card> cardList = cardSvc.getUserCards(currentUser.getUserId());
+                    
+                    if(cardList.size()==0){
+                        System.out.println("INFO: You have no card on file");
+                    }//if Ends 
+                    else{
+                        
+                        int index = 1;
+                        for(Card card : cardList){
+                            System.out.println(index+". "+card.getCardNumber());
+                            index++;
+                        }//for Ends  
+                        System.out.println("Select a Card: " );
+                        menuSelection = scanInput.next();
+                        
+                        //give the user a change to exit (to change his/her mind from using an existing card.
+                        while(menuSelectionIsValid(menuSelection, ('a'-cardList.size()) ) ){
+                            System.out.println("INVALID CARD SELECTION-Try again! " );
+                            menuSelection = scanInput.next();
+                        }//while Ends 
+                        
+                        usingExistingCard = true; 
+                    }//else-if Ends 
+                    
+                }//if(menuSelection.equalsIgnoreCase("y")) Ends 
+                
+                /**if user is not using existing card, ask for its input**/
+                if(usingExistingCard == false){
+                    //if user does not have a card request for a new card info
+                    System.out.println("\n|-----Enter Payment Information-----|"); 
+                    scanInput.nextLine();
+                    
+                    //create a new card objet
+                    Card newCard = new Card(); 
+
+                    System.out.println("Enter Card Number: ");
+                    //TODO: Validate Card Number (write a function for this) 
+                    String cardNumber = scanInput.nextLine();
+                    newCard.setCardNumber(cardNumber);
+
+                    //TODO: if name of card is different from username; it needs to be stored
+                    System.out.println("Enter Name on the card: ");
+                    String cardName = scanInput.nextLine();
+                   // newCard.setNameOnCard(cardName); 
+
+                    System.out.println("Enter card's Expiration date[MM/YY]: ");
+                    String cardExpDate = scanInput.nextLine();
+                   //newCard.setExpiryDate(cardExpDate);            
+
+                    System.out.println("Enter three/four digit security code: ");
+                    String securityCode = scanInput.next();//three digit
+                    newCard.setSecurityCode(securityCode);
+                    
+                    //ask user if he/she would like to save this card 
+                    System.out.println("Do you want to save this card?");
+                    
+                }//if (usingExistingCard == false)
+                
+
+                System.out.println("Enter [Y] to confirm payment or [C] to Cancel"); 
+                String confirmCode = scanInput.next(); 
+
+                System.out.println("Processing payment information...."); 
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Tiger.class.getName()).log(Level.SEVERE, null, ex);
+                }//try-catch
+                
+            }//if(payOption.equals("2")) Ends 
+            
+            System.out.println("Order Transaction Completed. Thank you");
+            
+            System.out.println("|------Summary of you Receipt-----|");
+            
+            System.out.println("Do you want an electronic copy of your receipt? \n"
+                    + "Enter [Y] for Yes or  No for [N]: ");
+            scanInput.next();
+            
+        }//collectOrderInfoScreen() Ends 
+        
+        
 	public static int currentOrderScreen() {
             int input = -1;
             while(input == -1)
@@ -296,7 +447,11 @@ public class Tiger{
 		System.out.println("5. Go Back");
 	    
                 input = sc.nextInt();
-                
+                //continue asking for the input until the user enters a valid one
+                while(input  > 5){
+                    System.out.println("Invalid Menu Select. try again ");
+                    input = sc.nextInt();
+                }//while Ends 
                 switch(input)
                 {
                     case 1:
@@ -327,21 +482,8 @@ public class Tiger{
                         
                 }
             }
-            //Previous code
-            /*
-	    if(input==1 && confirm()) {
-	    	currentOrder = new Order();
-			currentOrder.setOrder_id(Double.toString(Math.random()* 10001));
-			currentOrder.setUser_id(currentUser.getUserId());
-			currentOrder.setDelivery_status_id("0");
-	    }
-	    if(input==2) viewEditOrderItems(currentOrder);
-	    if(input==3) editOrder(currentOrder);
-	    if(input==4 && confirm()) sw.submitOrder(currentOrder);
-	    else if(input==5) homeScreen();
-            */
-            
-            System.out.println("Shouldn't be here");
+    
+            //System.out.println("Shouldn't be here");
             return -1;
 	}
 	
@@ -365,6 +507,11 @@ public class Tiger{
 		}
 	    
                 input = sc.nextInt();
+                //continue asking for the input until the user enters a valid one
+                while(input  > 6){
+                    System.out.println("Invalid Menu Select. try again ");
+                    input = sc.nextInt();
+                }//while Ends 
                 switch(input)
                 {
                     case 1:
@@ -379,14 +526,30 @@ public class Tiger{
     			System.out.println("Delivery Time Changed to: " + newDelivery_timestamp);
                         break;
                     case 3:
-                        String newInstructions = editString();
+                        String newInstructions = new Scanner( System.in).nextLine();
     			currentOrder.setInstuctions(newInstructions);
     			System.out.println("Instructions Changed to: " + newInstructions);
                         break;
                     case 4:
-                        String newDelivery_method = editString();
-    			currentOrder.setDelivery_method_id(newDelivery_method);
-    			System.out.println("Delivery Method Changed to: " + newDelivery_method);
+                                                /**
+                         * TODO: print the delivery method 
+                         */
+                         System.out.println("\n Choose Delivery Method"); 
+                         showDeliverMethods();
+                         
+                         String newDelivery_method = new Scanner(System.in).next();
+                         newDelivery_method = newDelivery_method.trim();
+                         
+                         while(newDelivery_method.length()>1 ||
+                                 (newDelivery_method.charAt(0) <'0' || newDelivery_method.charAt(0) > '2') ){
+                             newDelivery_method = new Scanner(System.in).next();
+                             newDelivery_method = newDelivery_method.trim();
+                         }//if Ends 
+                         
+                         currentOrder.setDelivery_method_id(newDelivery_method);
+                         
+                         System.out.println("Delivery Method Changed to: " + newDelivery_method);
+                       
                         break;
                     case 5:
                         String newStore = editString();
@@ -401,39 +564,7 @@ public class Tiger{
                         
                 }
             }
-                //Previous code
-                /*
-    		if(input==1){
-    			int newTip = Integer.parseInt(editString());
-    			currentOrder.setTip(newTip);
-    			System.out.println("Tip Changed to: $" + newTip);
-    		}
-    		if(input==2){
-    			int newDelivery_timestamp = Integer.parseInt(editString());
-    			currentOrder.setDelivery_timestamp(newDelivery_timestamp);
-    			System.out.println("Delivery Time Changed to: " + newDelivery_timestamp);
-    		}
-    		if(input==3){
-    			String newInstructions = editString();
-    			currentOrder.setInstuctions(newInstructions);
-    			System.out.println("Instructions Changed to: " + newInstructions);
-    		}
-    		if(input==4){
-    			String newDelivery_method = editString();
-    			currentOrder.setDelivery_method_id(newDelivery_method);
-    			System.out.println("Delivery Method Changed to: " + newDelivery_method);
-    		}
-    		if(input==5){
-    			String newStore = editString();
-    			currentOrder.setStore_id(newStore);
-    			System.out.println("Delivery Method Changed to: " + newStore);
-    		}
-
-    		if(input==6) homeScreen();
-                */
-	    //currentOrderScreen();
-	           System.out.println("Shouldn't be here");
-                   return -1;
+            
 	}
 
 	//TODO get item from item id here
@@ -508,7 +639,11 @@ public class Tiger{
 		}
 	    
                 input = sc.nextInt();
-                
+                //continue asking for the input until the user enters a valid one
+                while(input  > 9){
+                    System.out.println("Invalid Menu Select. try again ");
+                    input = sc.nextInt();
+                }//while Ends 
                 switch(input)
                 {
                     case 1:
@@ -674,7 +809,15 @@ public class Tiger{
                 }
                 return -1;
 	}
-
+        
+        public static void showDeliverMethods(){
+            DeliveryMethodService deliverySvc = new DeliveryMethodService(con);
+            
+            for(DeliveryMethod m : deliverySvc.getAll()){
+                System.out.println(m.getDelivery_method_id()+ " "+ m.getDelivery_method());
+            }//for Ends 
+               
+        }//showDeliverMethods() Ends 
 	public static boolean confirm(){
 		System.out.println("\n1*Confirm*");
 		System.out.println("1. Yes");
@@ -683,4 +826,12 @@ public class Tiger{
 	    if(input==1) return true;
 	    return false;
 	}
+        
+        //returns false if the index entered for menu selection is out of range
+        //or not a valid input
+        public static boolean menuSelectionIsValid(String selection, char maxIndex){
+            
+            return !(selection.length()>1 ||
+                 (selection.charAt(0) < '1' || selection.charAt(0) > maxIndex)); 
+        }//menuSelectionIsValid() Ends 
 }

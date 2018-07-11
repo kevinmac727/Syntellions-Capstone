@@ -64,7 +64,7 @@ public class ServiceWrapper {
 			count++;
 			System.out.println(count + ". $" + menu.getPrice() + " " + menu.getName());
 		}
-		System.out.println(++count + ". Go Back");
+		System.out.println(++count + ". [Done]");
 	}
 
 	public static void printOrders(ArrayList<Order> orders){

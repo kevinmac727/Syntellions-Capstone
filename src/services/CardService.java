@@ -155,7 +155,7 @@ public class CardService implements Service<Card>{
 		
 		try{
 			Statement cardsSt = connection.createStatement();
-			ResultSet cardsRs = cardsSt.executeQuery("Select * from Cards where userId = '" + userId + "'");
+			ResultSet cardsRs = cardsSt.executeQuery("Select * from Cards where user_id = '" + userId + "'");
 			
 			while(cardsRs.next()){
 				Card card = new Card(
@@ -173,5 +173,21 @@ public class CardService implements Service<Card>{
 		return cards;
 	}
 
-
+        public boolean validateCreditCard(String creditCardNumber){
+            
+            return false;
+        }
+        
+        public boolean validateExpDate(String date){
+            //make sure date has the right format
+            
+            //make sure date has not expired
+           
+            return false; 
+        }
+        
+        public boolean validaeSecurityCode(String securityCodes){
+            
+            return false; 
+        }
 }

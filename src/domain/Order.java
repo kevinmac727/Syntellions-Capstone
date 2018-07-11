@@ -48,6 +48,7 @@ public class Order {
 		this.instuctions = "";
 		this.delivery_method_id = "0";
 		this.store_id = "0";
+               // this.card_id = null;
 		this.delivery_status_id = "0";
 	}
 	
