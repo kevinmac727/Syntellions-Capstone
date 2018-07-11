@@ -3,18 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/LocationService.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/DeliveryMethodService.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/SQl/Stored%20Procedures/user_sp.sql</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/domain/Location.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/CardService.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/DeliveryMethod.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/cli/Tiger.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/domain/IdException.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/services/ItemTypeService.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/SQl/database_creation.sql</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/domain/UserStatus.java</file>
-            <file>file:/C:/Users/syntel.PHX440G3-2815X6/Documents/GitHub/Syntellions-Capstone/src/cli/AdminAndManager.java</file>
+            <file>file:/C:/Users/syntel.PHX440G3-28160J/Documents/GitHub/Syntellions-Capstone/src/cli/Tiger.java</file>
         </group>
     </open-files>
 </project-private>
