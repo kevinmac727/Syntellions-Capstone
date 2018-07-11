@@ -66,12 +66,12 @@ public class ServiceWrapper {
 			count++;
 			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
-<<<<<<< HEAD
+
 		System.out.println(++count + ". [Done]");
-=======
+
                 // we dont need count
 		System.out.println( ++count + ". Go Back");
->>>>>>> master
+
 	}
         
         

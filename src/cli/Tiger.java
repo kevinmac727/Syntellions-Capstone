@@ -11,15 +11,16 @@ import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
-<<<<<<< HEAD
+import java.sql.Date;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import services.CardService;
 import services.DeliveryMethod;
 import services.DeliveryMethodService;
-=======
+
 import services.EmailService;
->>>>>>> master
+
 import services.MenuServices;
 import services.OrderService;
 import services.StoreService;
@@ -596,9 +597,7 @@ public class Tiger{
                         
                 }
             }
-<<<<<<< HEAD
-            
-=======
+
                 //Previous code
                 /*
     		if(input==1){
@@ -632,7 +631,7 @@ public class Tiger{
 	    //currentOrderScreen();
 	           //System.out.println("Shouldn't be here");
                    //return -1;
->>>>>>> master
+
 	}
 
 	//TODO get item from item id here
@@ -888,6 +887,7 @@ public class Tiger{
             chosen.setExpiryDate(date);
             //Call SQL statement to update card?
             cs.update(chosen);
+            return 0;//Don't know what is actually supposed to be returned.
 	}
 
 	private static String editString() 
