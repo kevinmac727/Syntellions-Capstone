@@ -11,6 +11,10 @@ import domain.Menu;
 import domain.Order;
 import domain.Store;
 import domain.User;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import services.CardService;
 import services.MenuServices;
 import services.OrderService;
@@ -637,7 +641,8 @@ public class Tiger{
             String cardID;
             String userID = currentUser.getUserId();
             String cardNumber;
-            String expiryCode;
+            Integer expMonth;
+            Integer expYear;
             String ccv;
             
             while(true)
@@ -657,14 +662,25 @@ public class Tiger{
                     cardNumber = inString;
                     break;
                 }
+                
             }
-            System.out.println("Please enter expiry date");
-            expiryCode = sc.nextLine();
+            sc.skip("/");
+            System.out.println("Please enter expiry date (MM/YYYY)");
+            expMonth = sc.nextInt();
+            expYear = sc.nextInt();
+            sc.nextLine();
             System.out.println("Please enter security code");
             ccv = sc.nextLine();
             
-            //Call SQL statement to update card?
             
+            //Set card values
+            chosen.setCardNumber(cardNumber);
+            chosen.setSecurityCode(ccv);
+            
+            Date date = new Date(1, 2, 3);
+            chosen.setExpiryDate(date);
+            //Call SQL statement to update card?
+            cs.update(chosen);
 	}
 
 	private static String editString() 
