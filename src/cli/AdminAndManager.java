@@ -621,7 +621,25 @@ public class AdminAndManager {
         }
 
         public static void addItemTypeScreen() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            System.out.println("List of item types");
+            
+            ItemTypeService its = new ItemTypeService(con);
+            
+            ArrayList<ItemType> itemTypeArr = its.getAll();
+            int count = 1;
+            for(ItemType it:itemTypeArr){
+                System.out.println(count + ". Item Type ID: " + it.getItemTypeId() + " Item Type: " + it.getItemType());
+                count ++;
+            }
+            System.out.println();
+            System.out.println("Insert an item ID that doesn't already exist in the database");
+            Scanner sc = new Scanner(System.in);
+            sc.nextLine();
+            String itemID = sc.nextLine();
+            System.out.println();
+            
+            //NEEDS TO BE FINISHED 7/12/2018. 
+            
         }
 
         public static void deleteItemTypeScreen() {
