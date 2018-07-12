@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import domain.Order;
 import java.sql.Types;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderService implements Service<Order>{
 	/*
@@ -64,8 +66,21 @@ public class OrderService implements Service<Order>{
 			return false;
 		}	
 	}
-	
-        public String addOrderAutoIncrement(Order order){
+	public int getMaxOrderID(){
+            try{
+                String statementString = "SELECT max(order_id) FROM orders";
+                Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(statementString);
+                
+                rs.next();
+                return rs.getInt(1);
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderService.class.getName()).log(Level.SEVERE, null, ex);
+                return -1;
+            }
+            
+        }
+        public Order addOrderAutoIncrement(Order order){
 		try{
 			//Add order items
 			CallableStatement statement = connection.prepareCall(
@@ -96,7 +111,7 @@ public class OrderService implements Service<Order>{
 				statement.execute();
 				statement.close();
 			}
-			return orderID;
+			return order;
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			return null;
