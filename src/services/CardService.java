@@ -174,21 +174,75 @@ public class CardService implements Service<Card>{
 		return cards;
 	}
 
+        /**
+         * @Author: Presley M.
+         * @param creditCardNumber
+         * @return 
+         * This function validates the credit card number, passed as a string parameter
+         * and returns true if the card number is valid or false otherwise. 
+         */
         public boolean validateCreditCard(String creditCardNumber){
             
-            return false;
-        }
+            if(creditCardNumber.length() < 15 && creditCardNumber.length() > 16){
+                return false; 
+            }//if Ends 
+            for(char c : creditCardNumber.toCharArray()){
+                if(c > '9' || c < '0')return false; 
+            }//for Ends 
+            return true;
+        }//validateCreditCard Ends 
         
+        /**
+         * @author: Presley M.
+         * @param date
+         * @return 
+         * This function validates the credit card's expiration date. It receives 
+         * the date as a String parameter 
+         */
         public boolean validateExpDate(String date){
             //make sure date has the right format
-            
-            //make sure date has not expired
-           
-            return false; 
-        }
+             date = date.trim();
+             int currentMonth = 7;
+             int currentYear = 18; 
+
+             try{
+                  //extract month and make sure it is a numeric value 
+                  //between 1 and 12
+                 int month = Integer.parseInt(date.substring(0, 2));
+                 if(month > 12) return false; 
+                 
+                 //ivalid if year has passed 
+                 int year = Integer.parseInt(date.substring(3, 5));
+                 if(year < 18) return false; 
+                 
+                 //invalid if it expires this year and the month has passed 
+                 if(month < currentMonth && year==currentYear) return false; 
+             }catch(Exception ex){
+                 //return false; 
+             }//try-catch ends 
+             
+            return true; 
+        }//validateExpDate() Ends 
         
-        public boolean validaeSecurityCode(String securityCodes){
+        /***
+         * @author: Presley M. 
+         * @param securityCodes
+         * @return 
+         * This function validate the 3-4 digit security code of the card  
+         */
+        public boolean validateSecurityCode(String securityCodes){
+            securityCodes = securityCodes.trim(); // remove white spaces 
+            if(securityCodes.length() > 4 || securityCodes.length() < 3){
+                return false;
+            }//if Ends 
             
-            return false; 
-        }
+            //if security code does not contain digits only 
+            if(securityCodes.matches("\\d\\d\\d") == false &&
+                    securityCodes.matches("\\d\\d\\d\\d")==false){
+                return false; 
+            }//if Ends 
+            
+            /*Another way: try Integer.parsInt(securityCodes) and catch exception*/
+            return true; 
+        }//validateSecurityCode
 }
