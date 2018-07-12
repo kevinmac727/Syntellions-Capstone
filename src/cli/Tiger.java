@@ -12,6 +12,8 @@ import domain.Order;
 import domain.Store;
 import domain.User;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -345,26 +347,28 @@ public class Tiger{
             
             //get the date and time of delivery from the user
             DeliveryStatusService dstatus = new DeliveryStatusService();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
             
             System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
             String deliveryDate = scanInput.nextLine();
-            while(dstatus.validateDeliveryDate(deliveryDate) == false){
-                //add date to receipt summary
-                System.out.println("INVALID DATE INPUT! TRY AGAIN");
-                deliveryDate = scanInput.nextLine();
-                
-            }//if Ends 
             
             System.out.println("\nEnter Delivery time [HH:MM]: "); 
             String deliveryTime = scanInput.nextLine();
             
-            //TODO:display informative message if the time is not within opening hours
-            while(dstatus.validateDeliveryTime(deliveryTime) == false){
-                //add time to  receipt summary
-                System.out.println("INVALID TIME INPUT! TRY AGAIN");
+            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
+                //add date to receipt summary
+                System.out.println("INVALID DATE INPUT! TRY AGAIN");
                 deliveryDate = scanInput.nextLine();
+                
+                System.out.println("\nEnter Delivery time [HH:MM]: "); 
+                deliveryTime = scanInput.nextLine();
+                
+                deliveryDateTime = deliveryDate+ " "+deliveryTime;
             }//if Ends 
+
             
+ 
             /**Display methods of delivery  for the user to choose from****/
             System.out.println("\nSelect Delivery method"); 
             showDeliverMethods();
@@ -445,6 +449,8 @@ public class Tiger{
                     //create a new card objet
                     Card newCard = new Card(); 
                     CardService cardSv = new CardService(con); 
+                    
+                    System.out.println("Enter Card Type: \n\n");
                     
                     System.out.println("Enter Card Number: ");
                     //TODO: Validate Card Number (write a function for this) 
@@ -684,7 +690,7 @@ public class Tiger{
         
 	private static int viewEditOrderItems(Order order) {
                 
-                
+                System.out.println("|----------Summary Order-----|");
 		ArrayList<Menu> items = viewSummaryOfCurrentOrder();
                    
                 int input = sc.nextInt();
@@ -701,9 +707,7 @@ public class Tiger{
          * @param menu
          * @return 
          */
-        public static ArrayList<Menu> viewSummaryOfCurrentOrder(){
-		System.out.println("*List of Selected Items *");
-                
+        public static ArrayList<Menu> viewSummaryOfCurrentOrder(){                
 		ArrayList<String> itemIds = currentOrder.getItem_ids();
                 
 		ArrayList<Menu> items = sw.getMenuItems(itemIds);

@@ -6,7 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DeliveryStatusService {
 	
@@ -111,20 +116,30 @@ public class DeliveryStatusService {
      * This function validates the delivery date.
      * -This restaurant will operate seven days a week
      */
-    public boolean validateDeliveryDate(String date){
+    public boolean validateDeliveryDateTime(String date){
         
-        return true;
-    }//validateDeliveryDate() Ends  
-    
-    /****************************************************
-     * @author: Presley M
-     * @return 
-     * This function validates the delivery time. 
-     * -This restaurant can only deliver with a certain time frame
-     */
-    public boolean validateDeliveryTime(String time){
-        
-        
-        return true; 
-    }//validateDeliveryTime() Ends 
+            try {
+                SimpleDateFormat dateFmt = new SimpleDateFormat("MM-DD-YYYY HH:MM");
+                
+                Date userDate =  dateFmt.parse(date);
+                Date sysDate = new Date();
+                
+                System.out.println(date+" [ "+userDate+" ]");
+                System.out.println(sysDate);
+                System.out.println(sysDate.before(userDate));
+                if(sysDate.after(userDate) == true){
+                    
+                    System.out.println("INVALID DATE: You selected a previous date/time. Try again!");
+                    return false; 
+                }//if Ends 
+                
+              //  System.out.print();
+            } //validateDeliveryDate() Ends
+            catch (ParseException ex) {
+                return false; 
+            }//try-catch Ends 
+            
+            return true;
+    }
+     
 }
