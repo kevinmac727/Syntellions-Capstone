@@ -29,6 +29,7 @@ import services.StoreService;
 import services.UserService;
 import services.CardService;
 import services.DeliveryStatusService;
+import services.Receipt;
 
 public class Tiger{
 
@@ -60,12 +61,17 @@ public class Tiger{
             while(input == -1 || input == 0)
             {
 		System.out.println(
-                          " __  __ _                     _ _        _____       __     \n"
-                        + "|  \\/  (_)                   (_| )      / ____|     / _|    \n"
-                        + "| \\  / |_ _ __ ___  _ __ ___  _|/ ___  | |     __ _| |_ ___ \n"
-                        + "| |\\/| | | '_ ` _ \\| '_ ` _ \\| | / __| | |    / _` |  _/ _ \\\n"
-                        + "| |  | | | | | | | | | | | | | | \\__ \\ | |___| (_| | ||  __/\n"
-                        + "|_|  |_|_|_| |_| |_|_| |_| |_|_| |___/  \\_____\\__,_|_| \\___|");
+                           "___________\n"                                        
+                         + "___  /___(_)____________\n"                          
+                         + "__  / __  /_  __ \\_  __ \\\n"                          
+                         + "_  /___  / / /_/ /  / / /\n"                          
+                         + "/_____/_/  \\____//_/ /_/\n"                           
+                         + "__________\n"                                         
+                         + "___  ____/___  ____________________________________\n"
+                         + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
+                         + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
+                         + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
+                         + "                /_/");                                
 		ArrayList<String> options = new ArrayList<String>();
 		options.add("Login");
 		options.add("Register");
@@ -127,7 +133,9 @@ public class Tiger{
 		if(password.equals(candidate.getPassword())){
 			currentUser = candidate;
 			currentOrder = new Order();
-			currentOrder.setOrder_id(Double.toString(Math.random()* 10001));
+                        OrderService service = new OrderService(con);
+                        
+			currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
 			currentOrder.setUser_id(currentUser.getUserId());
 			currentOrder.setDelivery_status_id("0");
 			//currentOrder.setCard_id();
@@ -202,7 +210,7 @@ public class Tiger{
                 System.out.println("An email will be sent shortly...\n");
                 String verifyInput;
                 String verifyCode = (Double.toString(Math.random()*10000)).substring(0, 4);
-                EmailService.sendEmail(currentUser.getEmail(), verifyCode);
+                EmailService.sendEmail(currentUser.getEmail(), verifyCode, 1);
                 while(currentUser.getUserStatusId().equals("0"))
                 {
                     System.out.println("Please verify your email address.");
@@ -296,6 +304,7 @@ public class Tiger{
                 input = sc.nextInt();
 	    
                 if(input==menus.size()+1) break;//homeScreen();
+                else if(input==menus.size()+2) return;
                 else menuItemScreen(menus.get(input-1));
                 //Test, unsure if this is proper
             }//while Ends 
@@ -313,7 +322,6 @@ public class Tiger{
 	    System.out.println("2. Go back");
 	    int input = sc.nextInt();
 	    if(input==1) itemQuantityScreen(menu);
-            else return; 
             //Test, unsure if this is proper
 	}
         
@@ -501,6 +509,8 @@ public class Tiger{
                 
             }//if(payOption.equals("2")) Ends 
             
+            ServiceWrapper sw = new ServiceWrapper(con);
+            sw.submitOrder(currentOrder);
             System.out.println("Order Transaction Completed. Thank you");
             
             System.out.println("|------Summary of you Receipt-----|");
@@ -508,7 +518,24 @@ public class Tiger{
             
             System.out.println("Do you want an electronic copy of your receipt? \n"
                     + "Enter [Y] for Yes or  No for [N]: ");
-            scanInput.next();
+            String receiptPick = scanInput.next(); // receiptPick used to determine 
+                                                   // whether user wants receipt (Y) or not (N)
+            if(receiptPick.equals("Y") || receiptPick.equals("y") || receiptPick.equals("yes") || receiptPick.equals("Yes"))
+            {
+                
+                System.out.println("Thank you for submitting your order!");
+                System.out.println("We will now send you an email containing your receipt...");
+                
+                Receipt rc = new Receipt(con);
+                
+                String receipt = rc.createReceipt(currentUser.getUserId());
+                EmailService.sendEmail(currentUser.getEmail(), receipt, 2);
+            }
+            else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals("no") || receiptPick.equals("No"))
+            {
+                System.out.println("Thank you for choosing Lion Express!");
+            }
+            
             
         }//collectOrderInfoScreen() Ends 
         
@@ -827,40 +854,7 @@ public class Tiger{
                 us.update(currentUser);
                 //accountScreen();
             }
-            //Previous code
-            /*
-    		if(input==1){
-    			String newFirstName = editString();
-    			currentUser.setFirstName(newFirstName);
-    			System.out.println("First Name Changed to: " + newFirstName);
-    		}
-    		if(input==2){
-    			String newLastName = editString();
-    			currentUser.setLastName(newLastName);
-    			System.out.println("Last Name Changed to: " + newLastName);
-    		}
-    		if(input==3){
-    			String newEmail = editString();
-    			currentUser.setEmail(newEmail);
-    			System.out.println("Email Changed to: " + newEmail);
-    		}
-    		if(input==4){
-    			String newPassword = editString();
-    			currentUser.setPassword(newPassword);
-    			System.out.println("Password Changed to: " + newPassword);
-    		}
-    		if(input==5){
-
-    			String newPhoneNumber = editString();
-    			currentUser.setPhone(newPhoneNumber);
-    			System.out.println("Phone Number Changed to: " + newPhoneNumber);
-    		}
-    		if(input==6) editCards();
-    		if(input==7) editLocations();
-    		if(input==8) allOrdersScreen();
-    		if(input==9) homeScreen();
-	    */
-	    
+       
             System.out.println("Shouldn't be here");
             return -1;
 	}
