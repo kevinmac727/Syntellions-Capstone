@@ -26,6 +26,7 @@ import services.OrderService;
 import services.StoreService;
 import services.UserService;
 import services.CardService;
+import services.DeliveryStatusService;
 import services.Receipt;
 
 public class Tiger{
@@ -332,20 +333,47 @@ public class Tiger{
 	}
         
         
+        /***********************************************************************
+         * @author: Presley M. 
+         * This function is used to collect information needed for successfully 
+         * process the order. This information includes:
+         * -Delivery info
+         * -Location 
+         * -Payment info 
+         */
         public static void collectOrderInfoScreen(){
             
             Scanner scanInput = new Scanner(System.in);
             String menuSelection = "";
             
             System.out.println("|--------Order summary--------|"); 
+            viewSummaryOfCurrentOrder();
             
             System.out.println("|------Order Information-------|");
             
-            System.out.println("\nEnter Delivery date (MM-DD-YYYY): ");
+            //get the date and time of delivery from the user
+            DeliveryStatusService dstatus = new DeliveryStatusService();
             
-            System.out.println("\nEnter Delivery time (HH:MM): "); 
+            System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
+            String deliveryDate = scanInput.nextLine();
+            while(dstatus.validateDeliveryDate(deliveryDate) == false){
+                //add date to receipt summary
+                System.out.println("INVALID DATE INPUT! TRY AGAIN");
+                deliveryDate = scanInput.nextLine();
+                
+            }//if Ends 
             
-            /**Display methods of delivery  for the user to choose from*/
+            System.out.println("\nEnter Delivery time [HH:MM]: "); 
+            String deliveryTime = scanInput.nextLine();
+            
+            //TODO:display informative message if the time is not within opening hours
+            while(dstatus.validateDeliveryTime(deliveryTime) == false){
+                //add time to  receipt summary
+                System.out.println("INVALID TIME INPUT! TRY AGAIN");
+                deliveryDate = scanInput.nextLine();
+            }//if Ends 
+            
+            /**Display methods of delivery  for the user to choose from****/
             System.out.println("\nSelect Delivery method"); 
             showDeliverMethods();
             menuSelection =scanInput.next();
@@ -369,6 +397,7 @@ public class Tiger{
             System.out.println("2. Credit/Debit");
             menuSelection = scanInput.next();
             
+            //ensure that user makes a valid menu selection
             while(menuSelectionIsValid(menuSelection, '2') == false){
                System.out.println("**INVALID SELECTION**\n"
                        + "Please enter [1] for Cash or [2] for Credit/Debit:");
@@ -403,12 +432,14 @@ public class Tiger{
                         menuSelection = scanInput.next();
                         
                         //give the user a change to exit (to change his/her mind from using an existing card.
-                        while(menuSelectionIsValid(menuSelection, ('a'-cardList.size()) ) ){
+                       /* while(menuSelectionIsValid(menuSelection, ('a'-cardList.size()) ) ){
                             System.out.println("INVALID CARD SELECTION-Try again! " );
                             menuSelection = scanInput.next();
-                        }//while Ends 
+                        }//while Ends */
                         
+                        //This boolean is set if the user selects an existing card
                         usingExistingCard = true; 
+                        
                     }//else-if Ends 
                     
                 }//if(menuSelection.equalsIgnoreCase("y")) Ends 
@@ -421,25 +452,39 @@ public class Tiger{
                     
                     //create a new card objet
                     Card newCard = new Card(); 
-
+                    CardService cardSv = new CardService(con); 
+                    
                     System.out.println("Enter Card Number: ");
                     //TODO: Validate Card Number (write a function for this) 
                     String cardNumber = scanInput.nextLine();
-                    newCard.setCardNumber(cardNumber);
-
+                   
+                    while(cardSv.validateCreditCard(cardNumber) == false ){
+                        System.out.println("INVALID CREDIT/DEBIT CARD NUMBER-TRY AGAIN: ");
+                        cardNumber = scanInput.nextLine();
+                    }//while Ends 
+                     newCard.setCardNumber(cardNumber);
+                     
                     //TODO: if name of card is different from username; it needs to be stored
                     System.out.println("Enter Name on the card: ");
                     String cardName = scanInput.nextLine();
-                   // newCard.setNameOnCard(cardName); 
-
+                    newCard.setNameOnCard(cardName); 
+                    
                     System.out.println("Enter card's Expiration date[MM/YY]: ");
                     String cardExpDate = scanInput.nextLine();
-                   //newCard.setExpiryDate(cardExpDate);            
-
+                    while(cardSv.validateExpDate(cardExpDate) == false ){
+                        System.out.println("INVALID DATE -TRY AGAIN! ");
+                        cardExpDate = scanInput.nextLine();
+                    }//while Ends 
+                    //newCard.setExpiryDate(cardExpDate);  
+                    
                     System.out.println("Enter three/four digit security code: ");
                     String securityCode = scanInput.next();//three digit
-                    newCard.setSecurityCode(securityCode);
-                    
+                    while(cardSv.validateSecurityCode(securityCode) == false ){
+                        System.out.println("INVALID SECURITY CODE -TRY AGAIN! ");
+                        securityCode = scanInput.nextLine();
+                    }//while Ends
+                     newCard.setSecurityCode(securityCode);
+                     
                     //ask user if he/she would like to save this card 
                     System.out.println("Do you want to save this card?");
                     
@@ -463,6 +508,7 @@ public class Tiger{
             System.out.println("Order Transaction Completed. Thank you");
             
             System.out.println("|------Summary of you Receipt-----|");
+            viewSummaryOfCurrentOrder();
             
             System.out.println("Do you want an electronic copy of your receipt? \n"
                     + "Enter [Y] for Yes or  No for [N]: ");
@@ -664,20 +710,10 @@ public class Tiger{
 	//TODO get item from item id here
         
 	private static int viewEditOrderItems(Order order) {
-		System.out.println("*View Items*");
                 
-		ArrayList<String> itemIds = currentOrder.getItem_ids();
                 
-		ArrayList<Menu> items = sw.getMenuItems(itemIds);
-		if(items.isEmpty()) System.out.println("No items");
-		//ServiceWrapper.printMenuItems(items);
-                 ServiceWrapper.printOrderItems(items);
-                 
-                // ServiceWrapper.editOrderItems(items);
-
-                
-                //System.out.println( " Go Back");
-                
+		ArrayList<Menu> items = viewSummaryOfCurrentOrder();
+                   
                 int input = sc.nextInt();
                 if(input==items.size()) return 0;//homeScreen();
                 else if(input==items.size()+1) return -1;//currentOrderScreen();
@@ -686,6 +722,26 @@ public class Tiger{
             //Test, unsure if proper
             return -1;
 	}
+        
+        /***************************************************************
+         * This function displays summary view of current order
+         * @param menu
+         * @return 
+         */
+        public static ArrayList<Menu> viewSummaryOfCurrentOrder(){
+		System.out.println("*List of Selected Items *");
+                
+		ArrayList<String> itemIds = currentOrder.getItem_ids();
+                
+		ArrayList<Menu> items = sw.getMenuItems(itemIds);
+                
+	       if(items.isEmpty()) System.out.println("No items");
+		//ServiceWrapper.printMenuItems(items);
+                 ServiceWrapper.printOrderItems(items);
+                 
+               return items;
+        }//viewCurrentOrderSummary() Ends 
+        
 	public static int orderItemScreen(Menu menu){
 		/*System.out.println(menu.getName());
 		System.out.println(menu.getDescription());
@@ -949,14 +1005,21 @@ public class Tiger{
                 return -1;
 	}
         
+        /******************************************************************
+         * @author: Presley M.
+         * This function retrieves the delivery methods from the database 
+         * and display them in a menu 
+         */
         public static void showDeliverMethods(){
             DeliveryMethodService deliverySvc = new DeliveryMethodService(con);
-            
+            int index = 1;
             for(DeliveryMethod m : deliverySvc.getAll()){
-                System.out.println(m.getDelivery_method_id()+ " "+ m.getDelivery_method());
+                System.out.println(index + " "+ m.getDelivery_method());
+                index++;
             }//for Ends 
                
         }//showDeliverMethods() Ends 
+        
 	public static boolean confirm(){
 		System.out.println("\n1*Confirm*");
 		System.out.println("1. Yes");
