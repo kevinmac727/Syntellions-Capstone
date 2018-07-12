@@ -130,7 +130,9 @@ public class Tiger{
 		if(password.equals(candidate.getPassword())){
 			currentUser = candidate;
 			currentOrder = new Order();
-			currentOrder.setOrder_id(Double.toString(Math.random()* 10001));
+                        OrderService service = new OrderService(con);
+                        
+			currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
 			currentOrder.setUser_id(currentUser.getUserId());
 			currentOrder.setDelivery_status_id("0");
 			//currentOrder.setCard_id();
@@ -299,6 +301,7 @@ public class Tiger{
                 input = sc.nextInt();
 	    
                 if(input==menus.size()+1) break;//homeScreen();
+                else if(input==menus.size()+2) return;
                 else menuItemScreen(menus.get(input-1));
                 //Test, unsure if this is proper
             }//while Ends 
@@ -316,7 +319,6 @@ public class Tiger{
 	    System.out.println("2. Go back");
 	    int input = sc.nextInt();
 	    if(input==1) itemQuantityScreen(menu);
-            else return; 
             //Test, unsure if this is proper
 	}
         
