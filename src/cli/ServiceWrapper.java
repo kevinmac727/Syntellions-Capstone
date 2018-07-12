@@ -107,7 +107,7 @@ public class ServiceWrapper {
         System.out.println(x++ + " Go Back");
 //        int number = in.nextInt();
 //        //
-//        if (number != 0){
+//        if (number <= mapCount.size()){
 //        System.out.println( "put 'D' for Delete and 'A' for Add items  ");
 //        char char_ = in.next().charAt(0);
 //        OrderEditItems(number, mapCount, menus, char_);
