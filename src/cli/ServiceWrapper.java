@@ -12,6 +12,9 @@ import domain.*;
 import static java.lang.System.in;
 import static java.lang.reflect.Array.get;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
 
 
 import services.MenuServices;
@@ -74,43 +77,61 @@ public class ServiceWrapper {
 
 	}
         
-        
+ //-----------------------------------------------------------------       
         public static void printOrderItems(ArrayList<Menu> menus){
-          // how can i get the id  Menu.getId()?  
-        HashMap<Menu, Integer> mapCount = new HashMap<> ();
+            
+            Scanner in = new Scanner (System.in);    
+            HashMap<Menu, Integer> mapCount = new HashMap<> ();
+            System.out.println( " Enter the number that you would like to edit");
 
-        for(Menu menu: menus){
+            for(Menu menu: menus){
+                int count;
+                if ( mapCount.containsKey(menu)){
+                    count = mapCount.get(menu) ;
+                    mapCount.put(menu, count+1);
 
-            int count;
-            if ( mapCount.containsKey(menu)){
-                count = mapCount.get(menu) ;
-                mapCount.put(menu, count+1);
+                } else {
 
-            } else {
-
-            count = 1;
-            mapCount.put(menu, count);
-
-              }
-        }
-        int x = 1;
-          //for (int i = 1; i<= mapCount.size(); i++ ){
-         for ( Menu key :mapCount.keySet() ){
-
-             int value = mapCount.get(key);
-
-                System.out.println( x++ + "   "+ value + "  * $" + key.getPrice() + " " + key.getName());
-
-            //}
-        }
-       // we dont need count
+                    count = 1;
+                    mapCount.put(menu, count);
+                    }
+            }
+            
+            int x = 1;
+            for ( Menu key :mapCount.keySet() ){
+                int value = mapCount.get(key);
+                System.out.println( x++ + "   "+ value + "  * $" 
+                        + key.getPrice() + " " + key.getName());   
+               }
+        System.out.println( "  ");
         System.out.println(x++ + " Go Back");
-        System.out.println( " Enter the number that you would like to edit: ");
-        
-        
-    }
-        
+        int number = in.nextInt();
+        //
+        if (number != 0){
+        System.out.println( "put 'D' for Delete and 'A' for Add items  ");
+        char char_ = in.next().charAt(0);
+        OrderEditItems(number, mapCount, menus, char_);
+        }
 
+    }
+    public static void OrderEditItems(int number, HashMap<Menu,
+                          Integer> map, ArrayList<Menu> menus, char c){
+            
+        Iterator iter = map.entrySet().iterator();
+         if ( c == 'D'){
+                for (int i = 1; i <= number; i++) {
+                    iter.remove();
+                }
+         }
+                //iter should be pointing at correct pair
+                Map.Entry<Menu, Integer> pair = (Map.Entry)iter.next();
+                if ( c == 'D'){
+                //Put in new value
+                map.put(pair.getKey(), number);
+                }     
+                printOrderItems(menus);
+   }    
+//--------------------------------------------------------------------
 	public static void printOrders(ArrayList<Order> orders){
 		int count = 0;
 		for(Order order: orders){
