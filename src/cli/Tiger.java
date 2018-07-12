@@ -933,7 +933,7 @@ public class Tiger{
             String mmyyyy = sc.next();
             String words[] = mmyyyy.split("/");
             System.out.println(words[0] + words[1]);
-            expMonth = Integer.parseInt(words[0]);
+            expMonth = Integer.parseInt(words[0]) - 1;
 
             expYear = Integer.parseInt(words[1]);
             sc.nextLine();

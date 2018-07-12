@@ -58,7 +58,7 @@ public class AdminAndManager {
                 int input = 0;
                 int option;
             while(true){
-                if(input == 12){
+                if(input >= 12){
                     break;
                 }
                 ServiceWrapper.printOptions(options);
@@ -262,8 +262,6 @@ public class AdminAndManager {
 		
 		CardService cs = new CardService(con);
 		cs.add(c);
-		AdminAndManager aam = new AdminAndManager(con);
-		aam.adminScreen();
 	}
 
 	public static void deleteCardScreen(){
