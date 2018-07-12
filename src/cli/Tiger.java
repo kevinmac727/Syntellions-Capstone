@@ -12,6 +12,9 @@ import domain.Order;
 import domain.Store;
 import domain.User;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,11 +34,12 @@ import services.Receipt;
 
 public class Tiger{
 
-	public static ServiceWrapper sw;
-	public static Connection con;
-	public static User currentUser;
-	public static Order currentOrder;
-	public static Store currentStore;
+	private static ServiceWrapper sw;
+	private static Connection con;
+	private static User currentUser;
+	private static Order currentOrder;
+	private static Store currentStore;
+        private static HashMap<Menu,Integer> orderSummary; 
 	
 	static Scanner sc;
 
@@ -130,16 +134,21 @@ public class Tiger{
 		}
 		if(password.equals(candidate.getPassword())){
 			currentUser = candidate;
-			currentOrder = new Order();
-                        OrderService service = new OrderService(con);
-                        
-			currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
-			currentOrder.setUser_id(currentUser.getUserId());
-			currentOrder.setDelivery_status_id("0");
-			//currentOrder.setCard_id();
-			StoreService ss = new StoreService(con);
-			currentStore = ss.getById("0");
-                        return homeScreen();
+                        if("1".equals(currentUser.getUserStatusId())){
+                            currentOrder = new Order();
+                            OrderService service = new OrderService(con);
+
+                            currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
+                            currentOrder.setUser_id(currentUser.getUserId());
+                            currentOrder.setDelivery_status_id("0");
+                            //currentOrder.setCard_id();
+                            StoreService ss = new StoreService(con);
+                            currentStore = ss.getById("0");
+                            return homeScreen();
+                        }else if("3".equals(currentUser.getUserStatusId()) || "5".equals(currentUser.getUserStatusId())){
+                            AdminAndManager aam = new AdminAndManager(con);
+                            aam.adminScreen();
+                        }
 	    }
 	    else{
 	    	System.out.println("Wrong email or password");
@@ -353,26 +362,28 @@ public class Tiger{
             
             //get the date and time of delivery from the user
             DeliveryStatusService dstatus = new DeliveryStatusService();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
             
             System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
             String deliveryDate = scanInput.nextLine();
-            while(dstatus.validateDeliveryDate(deliveryDate) == false){
-                //add date to receipt summary
-                System.out.println("INVALID DATE INPUT! TRY AGAIN");
-                deliveryDate = scanInput.nextLine();
-                
-            }//if Ends 
             
             System.out.println("\nEnter Delivery time [HH:MM]: "); 
             String deliveryTime = scanInput.nextLine();
             
-            //TODO:display informative message if the time is not within opening hours
-            while(dstatus.validateDeliveryTime(deliveryTime) == false){
-                //add time to  receipt summary
-                System.out.println("INVALID TIME INPUT! TRY AGAIN");
+            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
+                //add date to receipt summary
+                System.out.println("INVALID DATE INPUT! TRY AGAIN");
                 deliveryDate = scanInput.nextLine();
+                
+                System.out.println("\nEnter Delivery time [HH:MM]: "); 
+                deliveryTime = scanInput.nextLine();
+                
+                deliveryDateTime = deliveryDate+ " "+deliveryTime;
             }//if Ends 
+
             
+ 
             /**Display methods of delivery  for the user to choose from****/
             System.out.println("\nSelect Delivery method"); 
             showDeliverMethods();
@@ -453,6 +464,8 @@ public class Tiger{
                     //create a new card objet
                     Card newCard = new Card(); 
                     CardService cardSv = new CardService(con); 
+                    
+                    System.out.println("Enter Card Type: \n\n");
                     
                     System.out.println("Enter Card Number: ");
                     //TODO: Validate Card Number (write a function for this) 
@@ -711,7 +724,7 @@ public class Tiger{
         
 	private static int viewEditOrderItems(Order order) {
                 
-                
+                System.out.println("|----------Summary Order-----|");
 		ArrayList<Menu> items = viewSummaryOfCurrentOrder();
                    
                 int input = sc.nextInt();
@@ -728,16 +741,14 @@ public class Tiger{
          * @param menu
          * @return 
          */
-        public static ArrayList<Menu> viewSummaryOfCurrentOrder(){
-		System.out.println("*List of Selected Items *");
-                
+        public static ArrayList<Menu> viewSummaryOfCurrentOrder(){                
 		ArrayList<String> itemIds = currentOrder.getItem_ids();
                 
 		ArrayList<Menu> items = sw.getMenuItems(itemIds);
                 
 	       if(items.isEmpty()) System.out.println("No items");
 		//ServiceWrapper.printMenuItems(items);
-                 ServiceWrapper.printOrderItems(items);
+                orderSummary = ServiceWrapper.printOrderItems(items);
                  
                return items;
         }//viewCurrentOrderSummary() Ends 
@@ -877,7 +888,7 @@ public class Tiger{
             ArrayList<Card> cards = cs.getUserCards(currentUser.getUserId());
             
             Integer input = -1;
-            while(input < 1 && input > cards.size() + 1)
+            while(input < 1 || input > cards.size() + 1)
             {
             System.out.println("Please select the card to edit");
             
@@ -907,33 +918,36 @@ public class Tiger{
                 
                 
                 System.out.println("Please enter new card number");
-                input = sc.nextInt();
+                String creditInput = sc.next();
                 sc.nextLine(); //Just ensuring input buffer gets flushed
-                String inString = input.toString();
-                if (inString.length() != 16) {
+                if (creditInput.length() != 16) {
                     System.out.println("Invalid card input, please try again");
                 }
                 else
                 {
-                    cardNumber = inString;
+                    cardNumber = creditInput;
                     break;
                 }
                 
             }
-            sc.skip("/");
+
             System.out.println("Please enter expiry date (MM/YYYY)");
-            expMonth = sc.nextInt();
-            expYear = sc.nextInt();
+            String mmyyyy = sc.next();
+            String words[] = mmyyyy.split("/");
+            System.out.println(words[0] + words[1]);
+            expMonth = Integer.parseInt(words[0]) - 1;
+
+            expYear = Integer.parseInt(words[1]);
             sc.nextLine();
             System.out.println("Please enter security code");
-            ccv = sc.nextLine();
+            ccv = sc.next();
             
             
             //Set card values
             chosen.setCardNumber(cardNumber);
             chosen.setSecurityCode(ccv);
             
-            Date date = new Date(1, 2, 3);
+            Date date = new Date(expYear, expMonth, 3); //Date doesn't represent proper date in database.
             chosen.setExpiryDate(date);
             //Call SQL statement to update card?
             cs.update(chosen);

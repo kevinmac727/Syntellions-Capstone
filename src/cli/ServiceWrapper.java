@@ -12,6 +12,9 @@ import domain.*;
 import static java.lang.System.in;
 import static java.lang.reflect.Array.get;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
 
 
 import services.MenuServices;
@@ -67,35 +70,37 @@ public class ServiceWrapper {
 			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
 
-		System.out.println(++count + ". [Done]");
-
-                // we dont need count
-		System.out.println( ++count + ". Go Back");
-
+		System.out.println(++count + ". Go back");
 	}
         
-        
+        /***************************************************************************
+         * This function prints out a summary of the the items select (or ordered) 
+         * @param menus
+         * @return 
+         * @author: Maryam 
+         */
         public static  HashMap<Menu, Integer> printOrderItems(ArrayList<Menu> menus){
           // how can i get the id  Menu.getId()?  
-          HashMap<Menu, Integer> mapCount = new HashMap<> ();
-          double totalPrice = 0;
+          HashMap<Menu, Integer> mapCount = new HashMap<> (); //map to hold the item counts and item names 
+          double totalPrice = 0; // for storing the total price 
+          
+          //tally the items 
           for(Menu menu: menus){
-
               int count;
               if ( mapCount.containsKey(menu)){
                   count = mapCount.get(menu) ;
                   mapCount.put(menu, count+1);
-
               } else {
 
               count = 1;
               mapCount.put(menu, count);
 
-                }
-          }
+                }//if Else ends 
+          }//for Ends 
+          
           int x = 1;
 
-            //for (int i = 1; i<= mapCount.size(); i++ ){
+          //for (int i = 1; i<= mapCount.size(); i++ ){
           System.out.println("\tCost\tCount\tUnit Price\tItem");
           for ( Menu key :mapCount.keySet() ){
 
@@ -114,7 +119,7 @@ public class ServiceWrapper {
           
     }//printOrderItems() Ends 
         
-
+    
     public static void printOrders(ArrayList<Order> orders){
             int count = 0;
             for(Order order: orders){
