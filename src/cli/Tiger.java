@@ -130,16 +130,21 @@ public class Tiger{
 		}
 		if(password.equals(candidate.getPassword())){
 			currentUser = candidate;
-			currentOrder = new Order();
-                        OrderService service = new OrderService(con);
-                        
-			currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
-			currentOrder.setUser_id(currentUser.getUserId());
-			currentOrder.setDelivery_status_id("0");
-			//currentOrder.setCard_id();
-			StoreService ss = new StoreService(con);
-			currentStore = ss.getById("0");
-                        return homeScreen();
+                        if("1".equals(currentUser.getUserStatusId())){
+                            currentOrder = new Order();
+                            OrderService service = new OrderService(con);
+
+                            currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
+                            currentOrder.setUser_id(currentUser.getUserId());
+                            currentOrder.setDelivery_status_id("0");
+                            //currentOrder.setCard_id();
+                            StoreService ss = new StoreService(con);
+                            currentStore = ss.getById("0");
+                            return homeScreen();
+                        }else if("3".equals(currentUser.getUserStatusId()) || "5".equals(currentUser.getUserStatusId())){
+                            AdminAndManager aam = new AdminAndManager(con);
+                            aam.adminScreen();
+                        }
 	    }
 	    else{
 	    	System.out.println("Wrong email or password");
