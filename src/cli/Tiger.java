@@ -14,6 +14,7 @@ import domain.User;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +34,12 @@ import services.Receipt;
 
 public class Tiger{
 
-	public static ServiceWrapper sw;
-	public static Connection con;
-	public static User currentUser;
-	public static Order currentOrder;
-	public static Store currentStore;
+	private static ServiceWrapper sw;
+	private static Connection con;
+	private static User currentUser;
+	private static Order currentOrder;
+	private static Store currentStore;
+        private static HashMap<Menu,Integer> orderSummary; 
 	
 	static Scanner sc;
 
@@ -746,7 +748,7 @@ public class Tiger{
                 
 	       if(items.isEmpty()) System.out.println("No items");
 		//ServiceWrapper.printMenuItems(items);
-                 ServiceWrapper.printOrderItems(items);
+                orderSummary = ServiceWrapper.printOrderItems(items);
                  
                return items;
         }//viewCurrentOrderSummary() Ends 
