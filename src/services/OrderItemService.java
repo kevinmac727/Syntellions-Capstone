@@ -36,7 +36,7 @@ public class OrderItemService implements Service<OrderItem>{
             Logger.getLogger(OrderItemService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void deleteItemById(String id){
 
 

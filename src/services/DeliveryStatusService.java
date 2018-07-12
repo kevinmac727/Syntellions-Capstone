@@ -104,5 +104,27 @@ public class DeliveryStatusService {
 		return deliveryStatus;
 	}
 	
-	
+    
+    /***************************************************
+     * @author: Presley M. 
+     * @return 
+     * This function validates the delivery date.
+     * -This restaurant will operate seven days a week
+     */
+    public boolean validateDeliveryDate(String date){
+        
+        return true;
+    }//validateDeliveryDate() Ends  
+    
+    /****************************************************
+     * @author: Presley M
+     * @return 
+     * This function validates the delivery time. 
+     * -This restaurant can only deliver with a certain time frame
+     */
+    public boolean validateDeliveryTime(String time){
+        
+        
+        return true; 
+    }//validateDeliveryTime() Ends 
 }
