@@ -70,122 +70,102 @@ public class ServiceWrapper {
 			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
 
-		System.out.println(++count + ". [Done]");
-
-                // we dont need count
-		System.out.println( ++count + ". Go Back");
-
+		System.out.println(++count + ". Go back");
 	}
         
- //-----------------------------------------------------------------       
-        public static void printOrderItems(ArrayList<Menu> menus){
-            
-           // Scanner in = new Scanner (System.in);    
-            HashMap<Menu, Integer> mapCount = new HashMap<> ();
-            System.out.println( " Enter the number that you would like to edit");
+        /***************************************************************************
+         * This function prints out a summary of the the items select (or ordered) 
+         * @param menus
+         * @return 
+         * @author: Maryam 
+         */
+        public static  HashMap<Menu, Integer> printOrderItems(ArrayList<Menu> menus){
+          // how can i get the id  Menu.getId()?  
+          HashMap<Menu, Integer> mapCount = new HashMap<> (); //map to hold the item counts and item names 
+          double totalPrice = 0; // for storing the total price 
+          
+          //tally the items 
+          for(Menu menu: menus){
+              int count;
+              if ( mapCount.containsKey(menu)){
+                  count = mapCount.get(menu) ;
+                  mapCount.put(menu, count+1);
+              } else {
 
-            for(Menu menu: menus){
-                int count;
-                if ( mapCount.containsKey(menu)){
-                    count = mapCount.get(menu) ;
-                    mapCount.put(menu, count+1);
+              count = 1;
+              mapCount.put(menu, count);
 
-                } else {
+                }//if Else ends 
+          }//for Ends 
+          
+          int x = 1;
 
-                    count = 1;
-                    mapCount.put(menu, count);
-                    }
+          //for (int i = 1; i<= mapCount.size(); i++ ){
+          System.out.println("\tCost\tCount\tUnit Price\tItem");
+          for ( Menu key :mapCount.keySet() ){
+
+               int value = mapCount.get(key);
+
+               System.out.println( (x++) +".\t"+(value*key.getPrice())+"\t"+ value + "  \t$" + key.getPrice() + "\t\t" + key.getName());
+               totalPrice = (totalPrice + (value*key.getPrice()));
+          }//for Ends 
+
+          System.out.println("Total: "+ totalPrice);
+
+         // we dont need count
+          System.out.println(x++ + " Go Back");
+          
+          return mapCount;
+          
+    }//printOrderItems() Ends 
+        
+    
+    public static void printOrders(ArrayList<Order> orders){
+            int count = 0;
+            for(Order order: orders){
+                    count++;
+                    System.out.println(count + ". " + order.getPlaced_timestamp());
             }
-            
-            int x = 1;
-            for ( Menu key :mapCount.keySet() ){
-                int value = mapCount.get(key);
-                System.out.println( x++ + "   "+ value + "  * $" 
-                        + key.getPrice() + " " + key.getName());   
-               }
-        System.out.println( "  ");
-        System.out.println(x++ + " Go Back");
-//        int number = in.nextInt();
-//        //
-//        if (number <= mapCount.size()){
-//        System.out.println( "put 'D' for Delete and 'A' for Add items  ");
-//        char char_ = in.next().charAt(0);
-//        OrderEditItems(number, mapCount, menus, char_);
-//        }
+            System.out.println(count++ + ". Go Back");
+    }
+
+    public void cancelOrder(Order order) {
+            order.setDelivery_status_id("3");
+            OrderService os = new OrderService(con);
+            os.update(order);
+    }
+
+    public void submitOrder(Order currentOrder) {
+            // TODO Auto-generated method stub
+
+            currentOrder.setDelivery_status_id("0");
+            OrderService os = new OrderService(con);
+            os.add(currentOrder);
 
     }
-//    public static void OrderEditItems(int number, HashMap<Menu,
-//                          Integer> map, ArrayList<Menu> menus, char c){
-//            
-//        Iterator iter = map.entrySet().iterator();
-//         if ( c == 'D'){
-//                for (int i = 1; iter.hasNext(); i++) {
-//                    
-//                    if(number == i){
-//                        iter.remove();
-//                        break;
-//                    }//if Ends 
-//                    
-//                    iter.next();
-//                  
-//                }
-//         }
-//                //iter should be pointing at correct pair
-//                Map.Entry<Menu, Integer> pair = (Map.Entry)iter.next();
-//                if ( c == 'A'){
-//                     //Put in new value
-//                    int newCount = map.get(pair.getKey())+number;
-//                    map.put(pair.getKey(), newCount);
-//                }     
-//               // printOrderItems(menus);
-//   }    
-//--------------------------------------------------------------------
-	public static void printOrders(ArrayList<Order> orders){
-		int count = 0;
-		for(Order order: orders){
-			count++;
-			System.out.println(count + ". " + order.getPlaced_timestamp());
-		}
-		System.out.println(count++ + ". Go Back");
-	}
 
-	public void cancelOrder(Order order) {
-		order.setDelivery_status_id("3");
-		OrderService os = new OrderService(con);
-		os.update(order);
-	}
+    public ArrayList<Menu> getMenuItems(ArrayList<String> itemIds) {
 
-	public void submitOrder(Order currentOrder) {
-		// TODO Auto-generated method stub
-		
-		currentOrder.setDelivery_status_id("0");
-		OrderService os = new OrderService(con);
-		os.add(currentOrder);
-		
-	}
+            MenuServices ms = new MenuServices(con);
+            ArrayList<Menu> items = new ArrayList<Menu>();
 
-	public ArrayList<Menu> getMenuItems(ArrayList<String> itemIds) {
-		
-		MenuServices ms = new MenuServices(con);
-		ArrayList<Menu> items = new ArrayList<Menu>();
-		
-		
-		for (String itemId:itemIds){
-			items.add(ms.getById(itemId));
-		}
 
-		return items;
-	}
+            for (String itemId:itemIds){
+                    items.add(ms.getById(itemId));
+            }
 
-	public int calculateTotalPrice(ArrayList<String> item_ids) {
-		int total = 0;
-		ServiceWrapper sw = new ServiceWrapper(con);
-		ArrayList<Menu> items = sw.getMenuItems(item_ids);
-		for(Menu item: items){
-			total += item.getPrice();
-		}
-		return total;
-	}
+            return items;
+    }
+
+    public float calculateTotalPrice(ArrayList<String> item_ids) {
+            int total = 0;
+            ServiceWrapper sw = new ServiceWrapper(con);
+            ArrayList<Menu> items = sw.getMenuItems(item_ids);
+            for(Menu item: items){
+                    total += item.getPrice();
+            }
+            return total;
+    }
 
 
 }

@@ -9,6 +9,7 @@ public class Card {
 	String cardNumber;
 	Date expiryDate;
 	String securityCode;
+    private String cardName;
 	
         //Calls standard 'Object' class constructor via 'super'
 	public Card() {
@@ -65,7 +66,7 @@ public class Card {
 	}
 
     public void setNameOnCard(String cardName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.cardName = cardName; 
     }
 	
 	

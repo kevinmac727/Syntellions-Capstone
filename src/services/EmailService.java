@@ -9,18 +9,31 @@ import javax.mail.internet.MimeMessage;
 public class EmailService
 {
 
-    public static void sendEmail(String email, String verify)
+    public static void sendEmail(String email, String message, int type)
     {
+        String messageEmail = null;
+        String subjectEmail = null;
+        
+        if (type == 1)
+        {
+            messageEmail = "Your verification code is:\n ";
+            subjectEmail = "Verification Email";
+        }
+        else
+        {
+            messageEmail = "Your receipt can be found below:\n ";
+            subjectEmail = "Order Receipt";
+        }
+       
         try
         {
-            
             String host ="smtp.gmail.com" ;
             String user = "testingjavasyntel@gmail.com";
             String pass = "#pass123";
             String to = email;
             String from = "testingjavasyntel@gmail.com";
-            String subject = "Verification Email";
-            String messageText = "Your verification code is: " + verify;
+            String subject = subjectEmail;
+            String messageText = (messageEmail + " " + message);
             boolean sessionDebug = false;
 
             Properties props = System.getProperties();
