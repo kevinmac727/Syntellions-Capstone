@@ -80,7 +80,7 @@ public class ServiceWrapper {
  //-----------------------------------------------------------------       
         public static void printOrderItems(ArrayList<Menu> menus){
             
-            Scanner in = new Scanner (System.in);    
+           // Scanner in = new Scanner (System.in);    
             HashMap<Menu, Integer> mapCount = new HashMap<> ();
             System.out.println( " Enter the number that you would like to edit");
 
@@ -105,32 +105,40 @@ public class ServiceWrapper {
                }
         System.out.println( "  ");
         System.out.println(x++ + " Go Back");
-        int number = in.nextInt();
-        //
-        if (number != 0){
-        System.out.println( "put 'D' for Delete and 'A' for Add items  ");
-        char char_ = in.next().charAt(0);
-        OrderEditItems(number, mapCount, menus, char_);
-        }
+//        int number = in.nextInt();
+//        //
+//        if (number != 0){
+//        System.out.println( "put 'D' for Delete and 'A' for Add items  ");
+//        char char_ = in.next().charAt(0);
+//        OrderEditItems(number, mapCount, menus, char_);
+//        }
 
     }
-    public static void OrderEditItems(int number, HashMap<Menu,
-                          Integer> map, ArrayList<Menu> menus, char c){
-            
-        Iterator iter = map.entrySet().iterator();
-         if ( c == 'D'){
-                for (int i = 1; i <= number; i++) {
-                    iter.remove();
-                }
-         }
-                //iter should be pointing at correct pair
-                Map.Entry<Menu, Integer> pair = (Map.Entry)iter.next();
-                if ( c == 'D'){
-                //Put in new value
-                map.put(pair.getKey(), number);
-                }     
-                printOrderItems(menus);
-   }    
+//    public static void OrderEditItems(int number, HashMap<Menu,
+//                          Integer> map, ArrayList<Menu> menus, char c){
+//            
+//        Iterator iter = map.entrySet().iterator();
+//         if ( c == 'D'){
+//                for (int i = 1; iter.hasNext(); i++) {
+//                    
+//                    if(number == i){
+//                        iter.remove();
+//                        break;
+//                    }//if Ends 
+//                    
+//                    iter.next();
+//                  
+//                }
+//         }
+//                //iter should be pointing at correct pair
+//                Map.Entry<Menu, Integer> pair = (Map.Entry)iter.next();
+//                if ( c == 'A'){
+//                     //Put in new value
+//                    int newCount = map.get(pair.getKey())+number;
+//                    map.put(pair.getKey(), newCount);
+//                }     
+//               // printOrderItems(menus);
+//   }    
 //--------------------------------------------------------------------
 	public static void printOrders(ArrayList<Order> orders){
 		int count = 0;
