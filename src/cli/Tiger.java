@@ -41,7 +41,19 @@ public class Tiger{
 	private static Order currentOrder;
 	private static Store currentStore;
         private static HashMap<Menu,Integer> orderSummary; 
-	
+        private static String verticalTab = "\n\n\n\n\n\n\n\n\n\n\n\n\n";
+	private static String STORE_NAME =  "___________\n"                                        
+                         + "___  /___(_)____________\n"                          
+                         + "__  / __  /_  __ \\_  __ \\\n"                          
+                         + "_  /___  / / /_/ /  / / /\n"                          
+                         + "/_____/_/  \\____//_/ /_/\n"                           
+                         + "__________\n"                                         
+                         + "___  ____/___  ____________________________________\n"
+                         + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
+                         + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
+                         + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
+                         + "                /_/";
+        
 	static Scanner sc;
 
 	public static void main(String[] args) {
@@ -63,18 +75,8 @@ public class Tiger{
             int input = -1;
             while(input == -1 || input == 0)
             {
-		System.out.println(
-                           "___________\n"                                        
-                         + "___  /___(_)____________\n"                          
-                         + "__  / __  /_  __ \\_  __ \\\n"                          
-                         + "_  /___  / / /_/ /  / / /\n"                          
-                         + "/_____/_/  \\____//_/ /_/\n"                           
-                         + "__________\n"                                         
-                         + "___  ____/___  ____________________________________\n"
-                         + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
-                         + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
-                         + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
-                         + "                /_/");                                
+		System.out.println(STORE_NAME);     
+                
 		ArrayList<String> options = new ArrayList<String>();
 		options.add("Login");
 		options.add("Register");
@@ -84,10 +86,26 @@ public class Tiger{
 			count++;
 			System.out.println(count + ". " + option);
 		}
+                System.out.println("Make numeric menu selection ");
 		
-	    
-                input = sc.nextInt();
-            
+	       
+                String menuOption = sc.next();
+                while(menuSelectionIsValid(menuOption, '3') == false){
+                    System.out.println(verticalTab);
+                    System.out.print( STORE_NAME);
+                    count = 0;
+                    System.out.println();
+                    for(String option : options) {
+			count++;
+			System.out.println(count + ". " + option);
+                    }//for Ends 
+                    
+                    System.out.println("\nInvalid menu select. Please try again!");
+                    
+                    menuOption = sc.next();
+                }
+                    
+                input = Integer.parseInt(menuOption); 
                 //continue asking for the input until the user enters a valid one
                 while(input  > 3){
                     System.out.println("Invalid Menu Select. try again ");
@@ -96,9 +114,11 @@ public class Tiger{
                 switch(input){
                     case 1:
     			input = loginScreen();
+                        System.out.println(verticalTab);
                         break;
                     case 2:
     			input = registerScreen();
+                        System.out.println(verticalTab);
                         break;
                     case 3:
     			System.out.println("Goodbye");
@@ -109,6 +129,7 @@ public class Tiger{
     			AdminAndManager aam = new AdminAndManager(con);
     			aam.adminScreen();
                         //TEMPORARY HARD CODE, FIX AS SOON AS IT IS POSSIBLE
+                        System.out.println(verticalTab);
                         input = -1;
                         break;
                     default:
