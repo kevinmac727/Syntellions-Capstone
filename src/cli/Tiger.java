@@ -135,16 +135,21 @@ public class Tiger{
 		}
 		if(password.equals(candidate.getPassword())){
 			currentUser = candidate;
-			currentOrder = new Order();
-                        OrderService service = new OrderService(con);
-                        
-			currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
-			currentOrder.setUser_id(currentUser.getUserId());
-			currentOrder.setDelivery_status_id("0");
-			//currentOrder.setCard_id();
-			StoreService ss = new StoreService(con);
-			currentStore = ss.getById("0");
-                        return homeScreen();
+                        if("1".equals(currentUser.getUserStatusId())){
+                            currentOrder = new Order();
+                            OrderService service = new OrderService(con);
+
+                            currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
+                            currentOrder.setUser_id(currentUser.getUserId());
+                            currentOrder.setDelivery_status_id("0");
+                            //currentOrder.setCard_id();
+                            StoreService ss = new StoreService(con);
+                            currentStore = ss.getById("0");
+                            return homeScreen();
+                        }else if("3".equals(currentUser.getUserStatusId()) || "5".equals(currentUser.getUserStatusId())){
+                            AdminAndManager aam = new AdminAndManager(con);
+                            aam.adminScreen();
+                        }
 	    }
 	    else{
 	    	System.out.println("Wrong email or password");
@@ -910,7 +915,7 @@ public class Tiger{
             ArrayList<Card> cards = cs.getUserCards(currentUser.getUserId());
             
             Integer input = -1;
-            while(input < 1 && input > cards.size() + 1)
+            while(input < 1 || input > cards.size() + 1)
             {
             System.out.println("Please select the card to edit");
             
@@ -940,33 +945,36 @@ public class Tiger{
                 
                 
                 System.out.println("Please enter new card number");
-                input = sc.nextInt();
+                String creditInput = sc.next();
                 sc.nextLine(); //Just ensuring input buffer gets flushed
-                String inString = input.toString();
-                if (inString.length() != 16) {
+                if (creditInput.length() != 16) {
                     System.out.println("Invalid card input, please try again");
                 }
                 else
                 {
-                    cardNumber = inString;
+                    cardNumber = creditInput;
                     break;
                 }
                 
             }
-            sc.skip("/");
+
             System.out.println("Please enter expiry date (MM/YYYY)");
-            expMonth = sc.nextInt();
-            expYear = sc.nextInt();
+            String mmyyyy = sc.next();
+            String words[] = mmyyyy.split("/");
+            System.out.println(words[0] + words[1]);
+            expMonth = Integer.parseInt(words[0]) - 1;
+
+            expYear = Integer.parseInt(words[1]);
             sc.nextLine();
             System.out.println("Please enter security code");
-            ccv = sc.nextLine();
+            ccv = sc.next();
             
             
             //Set card values
             chosen.setCardNumber(cardNumber);
             chosen.setSecurityCode(ccv);
             
-            Date date = new Date(1, 2, 3);
+            Date date = new Date(expYear, expMonth, 3); //Date doesn't represent proper date in database.
             chosen.setExpiryDate(date);
             //Call SQL statement to update card?
             cs.update(chosen);

@@ -12,6 +12,9 @@ import domain.*;
 import static java.lang.System.in;
 import static java.lang.reflect.Array.get;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
 
 
 import services.MenuServices;
@@ -69,7 +72,6 @@ public class ServiceWrapper {
 
 		System.out.println(++count + ". Go back");
 	}
-        
         
         /***************************************************************************
          * This function prints out a summary of the the items select (or ordered) 
