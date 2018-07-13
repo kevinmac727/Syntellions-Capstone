@@ -1,26 +1,22 @@
-
-SHOW ERRORS;
-
-create or replace procedure sp_update_user(user_num varchar, firstN varchar, lastN varchar, pho varchar, eml varchar, psswd varchar, u_s_id varchar)
+create or replace procedure sp_insert_user_status(user_status_id number, user_status varchar)
 as 
 begin
-  update users
-  set first=firstN, last=lastN, phone=pho, email=eml, password=psswd, user_status_id=u_s_id
-  where user_id=user_num;
-end;
-
-create or replace procedure sp_insert_user(user_id varchar, first varchar, last varchar, phone varchar, email varchar, password varchar, user_status_id varchar)
-as 
-begin
-  insert into users
-  values(user_id, first, last, phone, email, password, user_status_id);
+  insert into user_statuses
+  values(user_status_id, user_status);
   
 end;
 
-
-create or replace procedure sp_delete_user_by_id(user_num number)
+create or replace procedure sp_update_user_status(user_status_num number, user_status_name varchar)
 as 
 begin
-  Delete from users where user_id = user_num;
+  update user_statuses
+  set user_status=user_status_name
+  where user_status_id=user_status_num;
+end;
+
+create or replace procedure sp_delete_user_status_by_id(user_status_num number)
+as 
+begin
+  Delete from user_statuses where user_status_id = user_status_num;
 end;
 

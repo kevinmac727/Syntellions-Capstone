@@ -70,8 +70,11 @@ public class ServiceWrapper {
 			count++;
 			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
-
+                
+                System.out.println(++count + ". Sumbit Order");
 		System.out.println(++count + ". Go back");
+                
+
 	}
         
         /***************************************************************************
