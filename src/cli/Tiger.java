@@ -316,14 +316,22 @@ public class Tiger{
                 ServiceWrapper.printMenuItems(menus);
                 input = sc.nextInt();
 	    
-                if(input==menus.size()+1) break;//homeScreen();
-                else if(input==menus.size()+2) return;
-                else menuItemScreen(menus.get(input-1));
+                 if(input==menus.size()+1){
+                    if(currentOrder.getOrderSize()>0) {
+                        collectOrderInfoScreen();
+                    }else{
+                        System.out.println("You have not selected any items yet [Press Enter to Continue..]");
+                        new Scanner(System.in).nextLine();
+                    }//if Ends 
+                 }//if Ends 
+                 
+                 else if(input==menus.size()+2) return;
+                 else if(input < menus.size()) menuItemScreen(menus.get(input-1));
                 //Test, unsure if this is proper
             }//while Ends 
             
             //collect additional information about the data
-            collectOrderInfoScreen();
+            
             
 	}//menuScreen() Ends 
         
