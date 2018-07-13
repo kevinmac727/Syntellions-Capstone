@@ -327,7 +327,7 @@ public class Tiger{
                  }//if Ends 
                  
                  else if(input==menus.size()+2) return;
-                 else if(input < menus.size()) menuItemScreen(menus.get(input-1));
+                 else if(input <= menus.size()) menuItemScreen(menus.get(input-1));
                 //Test, unsure if this is proper
             }//while Ends 
             
