@@ -554,21 +554,33 @@ public class Tiger{
                     + "Enter [Y] for Yes or  No for [N]: ");
             String receiptPick = scanInput.next(); // receiptPick used to determine 
                                                    // whether user wants receipt (Y) or not (N)
-            if(receiptPick.equals("Y") || receiptPick.equals("y") || receiptPick.equals("yes") || receiptPick.equals("Yes"))
-            {
+            if(receiptPick.equals("Y") || receiptPick.equals("y") || receiptPick.equals("yes") 
+                                || receiptPick.equals("Yes"))
+                             {           
                 
                 System.out.println("Thank you for submitting your order!");
                 System.out.println("We will now send you an email containing your receipt...");
-                
-                Receipt rc = new Receipt(con);
-                
-                String receipt = rc.createReceipt(currentUser.getUserId());
+
+                // String that is sent as Email message
+                String receipt = "\nOrder ID: " + currentOrder.getOrder_id() + 
+                        "\nUser ID: " + currentUser.getUserId() +
+                        "\nName: " + currentUser.getFirstName() + " " + currentUser.getLastName() +
+                        "\nPhone Number: " + currentUser.getPhone() +
+                        "\nEmail Address: " + currentUser.getEmail() +
+                        "\nStore ID: " + currentOrder.getStore_id() + 
+                        "\nStore Name: " + currentStore.getStoreName() +
+                        "\nOrder Method: " + currentOrder.getDelivery_method_id() + 
+                        "\nInstructions: " + currentOrder.getInstuctions() + 
+                        "\n" + ServiceWrapper.makeOrderItemsString(orderSummary);
                 EmailService.sendEmail(currentUser.getEmail(), receipt, 2);
+                
+                
             }
-            else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals("no") || receiptPick.equals("No"))
+            else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals
+                ("no") || receiptPick.equals("No"))
             {
                 System.out.println("Thank you for choosing Lion Express!");
-            }//else if Ends 
+            }
             
             
         }//collectOrderInfoScreen() Ends 

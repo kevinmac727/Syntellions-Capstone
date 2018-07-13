@@ -118,6 +118,25 @@ public class ServiceWrapper {
           return mapCount;
           
     }//printOrderItems() Ends 
+      
+        
+    public static String makeOrderItemsString(HashMap<Menu, Integer> mapCount)
+    { 
+            //This function requires a hasmap as an argument in order to work.
+            String finalOrderString = "";
+            double totalPrice = 0;
+            int x = 1;
+            finalOrderString+="\n";
+            for ( Menu key :mapCount.keySet() )
+            {
+                int value = mapCount.get(key);
+                finalOrderString+=(value + " - " + key.getName() + " = $" + value*key.getPrice() + "\n");
+                totalPrice = (totalPrice + (value*key.getPrice()));
+            }//for Ends 
+            finalOrderString+=("\nTotal Price: $"+ totalPrice);
+          
+            return finalOrderString;
+    }//makeOrderItemsString() Ends  
         
     
     public static void printOrders(ArrayList<Order> orders){
