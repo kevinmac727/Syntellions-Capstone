@@ -157,6 +157,7 @@ public class LocationService implements Service<Location>{
 			oCSF.setString(6, state);
 			oCSF.setString(7, country);
 			oCSF.setString(8, zip);
+                        oCSF.executeUpdate();
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}	

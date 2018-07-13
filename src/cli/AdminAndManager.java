@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import domain.Card;
 import domain.IdException;
+import domain.Location;
 import domain.Menu;
 import domain.Order;
 import domain.Store;
@@ -21,6 +22,7 @@ import services.DeliveryStatus;
 import services.DeliveryStatusService;
 import services.ItemType;
 import services.ItemTypeService;
+import services.LocationService;
 import services.MenuServices;
 import services.OrderItem;
 import services.OrderItemService;
@@ -125,7 +127,7 @@ public class AdminAndManager {
                             }
                             break;
                     }
-                    case 5://TODO
+                    case 5:
                         {      
                             option = optionsScreen("Item Type");
                             switch(option){
@@ -614,7 +616,7 @@ public class AdminAndManager {
                 newItemType.setItemType(newItemTypeString);
                 
                 its.update(newItemType);
-                System.out.println("Item type added.");
+                System.out.println("Item type updated.");
             }
         }
 
@@ -634,26 +636,184 @@ public class AdminAndManager {
             Scanner sc = new Scanner(System.in);
             sc.nextLine();
             String itemID = sc.nextLine();
-            System.out.println();
+            System.out.println("Insert an item type");
+            sc.nextLine();
+            String itemName = sc.nextLine();
             
-            //NEEDS TO BE FINISHED 7/12/2018. 
+            ItemType itemType = new ItemType(itemID, itemName);
+            its.add(itemType);
+            System.out.println("Item type added to the database");
             
         }
 
         public static void deleteItemTypeScreen() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            System.out.println("List of item types");
+            
+            ItemTypeService its = new ItemTypeService(con);
+            
+            ArrayList<ItemType> itemTypeArr = its.getAll();
+            int count = 1;
+            for(ItemType it:itemTypeArr){
+                System.out.println(count + ". Item Type ID: " + it.getItemTypeId() + " Item Type: " + it.getItemType());
+                count ++;
+            }
+            
+            System.out.println();
+            System.out.println("Choose an item type to delete.");
+            
+            Scanner sc = new Scanner(System.in);
+            
+            int input = sc.nextInt();
+            
+            if (input - 1 < itemTypeArr.size()){
+                ItemType newItemType = itemTypeArr.get(input - 1);
+  
+                its.deleteById(newItemType.getItemType());
+                System.out.println("Item type deleted.");
+            }
         }
 
     private void alterLocationScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            System.out.println("List of locations");
+            
+            LocationService ls = new LocationService(con);
+            
+            ArrayList<Location> locationArray = ls.getAll();
+            int count = 1;
+            for(Location loc:locationArray){
+                System.out.println(count + ". Location ID: " + loc.getLocationId()+ " User ID: " + loc.getUserID());
+                System.out.println("    Address: " + loc.getStreet() + ", " + loc.getCity() + ", " + loc.getState());
+                System.out.println("    Zip: " + loc.getZip() + " Country: " + loc.getCountry());
+                count ++;
+            }
+            
+            System.out.println();
+            System.out.println("Choose an location to alter.");
+            
+            Scanner sc = new Scanner(System.in);
+            
+            int input = sc.nextInt();
+            
+            if (input - 1 < locationArray.size()){
+                Location newLocation = locationArray.get(input - 1);
+                String userID = null;
+                System.out.println("Is this location for a user(1) or a store(2)");
+                int storeOrUser = sc.nextInt();
+                if(storeOrUser == 1){
+                    System.out.println("Enter the id for the user");
+                    userID = sc.next();
+                }
+                System.out.println("Enter the street name");
+                sc.nextLine();
+                String street = sc.nextLine();
+                System.out.println("Enter the city");
+                String city = sc.nextLine();
+                System.out.println("Enter the state");
+                String state = sc.nextLine();
+                System.out.println("Enter the zip code");
+                String zipCode = sc.nextLine();
+                System.out.println("Enter the Country");
+                String country = sc.nextLine();
+                System.out.println("Enter the taxrate");
+                float tax = sc.nextFloat();
+                
+                newLocation.setUserID(userID);
+                newLocation.setStreet(street);
+                newLocation.setCity(city);
+                newLocation.setState(state);
+                newLocation.setZip(zipCode);
+                newLocation.setCountry(country);
+                newLocation.setTaxrate(tax);
+                
+                ls.update(newLocation);
+                System.out.println("Location updated.");
+            }
     }
 
-    private void addLocationScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void addLocationScreen() {
+                   System.out.println("List of locations");
+            
+            LocationService ls = new LocationService(con);
+            
+            ArrayList<Location> locationArray = ls.getAll();
+            int count = 1;
+            for(Location loc:locationArray){
+                System.out.println(count + ". Location ID: " + loc.getLocationId()+ " User ID: " + loc.getUserID());
+                System.out.println("    Address: " + loc.getStreet() + ", " + loc.getCity() + ", " + loc.getState());
+                System.out.println("    Zip: " + loc.getZip() + " Country: " + loc.getCountry());
+                count ++;
+            }
+            
+            System.out.println();
+            System.out.println("Type 1 to add a location and anyother number to exit");
+            
+            Scanner sc = new Scanner(System.in);
+            
+            int input = sc.nextInt();
+            
+            if (input == 1){
+                Location newLocation = new Location();
+                String userID = null;
+                System.out.println("Is this location for a user(1) or a store(2)");
+                int storeOrUser = sc.nextInt();
+                if(storeOrUser == 1){
+                    System.out.println("Enter the id for the user");
+                    userID = sc.next();
+                }
+                System.out.println("Enter the street name");
+                sc.nextLine();
+                String street = sc.nextLine();
+                System.out.println("Enter the city");
+                String city = sc.nextLine();
+                System.out.println("Enter the state");
+                String state = sc.nextLine();
+                System.out.println("Enter the zip code");
+                String zipCode = sc.nextLine();
+                System.out.println("Enter the Country");
+                String country = sc.nextLine();
+                System.out.println("Enter the taxrate");
+                float tax = sc.nextFloat();
+                
+                newLocation.setUserID(userID);
+                newLocation.setStreet(street);
+                newLocation.setCity(city);
+                newLocation.setState(state);
+                newLocation.setZip(zipCode);
+                newLocation.setCountry(country);
+                newLocation.setTaxrate(tax);
+                
+                String locationID = ls.addLocationAutoIncrementID(newLocation);
+                newLocation.setLocationId(locationID);
+                System.out.println("Location added.");
+            }
     }
 
     private void deleteLocationScreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            System.out.println("List of locations");
+            
+            LocationService ls = new LocationService(con);
+            
+            ArrayList<Location> locationArray = ls.getAll();
+            int count = 1;
+            for(Location loc:locationArray){
+                System.out.println(count + ". Location ID: " + loc.getLocationId()+ " User ID: " + loc.getUserID());
+                System.out.println("    Address: " + loc.getStreet() + ", " + loc.getCity() + ", " + loc.getState());
+                System.out.println("    Zip: " + loc.getZip() + " Country: " + loc.getCountry());
+                count ++;
+            }
+            
+            System.out.println();
+            System.out.println("Choose an location to delete.");
+            
+            Scanner sc = new Scanner(System.in);
+            
+            int input = sc.nextInt();
+            
+            if (input - 1 < locationArray.size()){
+                Location loc = locationArray.get(input - 1);
+                ls.deleteById(loc.getLocationId());
+                System.out.println("location deleted");
+            }
     }
 
         public static void alterOrderScreen() {
@@ -675,7 +835,8 @@ public class AdminAndManager {
 //                    System.out.println("Card: " + o.getCard_id());
 //                }
 //                count ++;
-//            }        
+//            }       
+            throw new UnsupportedOperationException("Not supported yet."); 
         }
 
     private void addOrderScreen() {
