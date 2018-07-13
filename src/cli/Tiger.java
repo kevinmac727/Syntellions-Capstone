@@ -844,78 +844,86 @@ public class Tiger{
             int input = -1;
             while(input == -1)
             {
-		System.out.println("\n*Account*");
-		ArrayList<String> options = new ArrayList<String>();
-		options.add("Edit First Name");
-		options.add("Edit Last Name");
-		options.add("Edit Email");
-		options.add("Edit Password");
-		options.add("Edit Phone Number");
-		options.add("Edit Payment Options");
-		options.add("Edit Saved Locations");
-		options.add("View Orders");
-		options.add("Go Back");
-		int count = 0;
-		for(String option : options) {
-			count++;
-			System.out.println(count + ". " + option);
+                System.out.println("\n*Account*");
+                ArrayList<String> options = new ArrayList<String>();
+                options.add("Edit First Name");
+                options.add("Edit Last Name");
+                options.add("Edit Email");
+                options.add("Edit Password");
+                options.add("Edit Phone Number");
+                options.add("Edit Payment Options");
+                options.add("Edit Saved Locations");
+                options.add("View Orders");
+                options.add("Go Back");
+                int count = 0;
+                for(String option : options) {
+                    count++;
+                    System.out.println(count + ". " + option);
 		}
-	    
-                input = sc.nextInt();
-                //continue asking for the input until the user enters a valid one
-                while(input  > 9){
-                    System.out.println("Invalid Menu Select. try again ");
+                try{
                     input = sc.nextInt();
-                }//while Ends 
-                switch(input)
-                {
-                    case 1:
-                        String newFirstName = editString();
-    			currentUser.setFirstName(newFirstName);
-    			System.out.println("First Name Changed to: " + newFirstName);
-                        break;
-                    case 2:
-                        String newLastName = editString();
-    			currentUser.setLastName(newLastName);
-    			System.out.println("Last Name Changed to: " + newLastName);
-                        break;
-                    case 3:
-                        String newEmail = editString();
-    			currentUser.setEmail(newEmail);
-    			System.out.println("Email Changed to: " + newEmail);
-                        break;
-                    case 4:
-                        String newPassword = editString();
-    			currentUser.setPassword(newPassword);
-    			System.out.println("Password Changed to: " + newPassword);
-                    case 5:
-                        String newPhoneNumber = editString();
-    			currentUser.setPhone(newPhoneNumber);
-    			System.out.println("Phone Number Changed to: " + newPhoneNumber);
-                        break;
-                    case 6:
-                        editCards();
-                        break;
-                    case 7:
-                        editLocations();
-                        break;
-                    case 8:
-                        input = allOrdersScreen();
-                        break;
-                    case 9:
-                        //homeScreen();
-                        return 0;
-                    default:
-                        input = -1;
-                        continue;
+                    //Continue asking for the input until the user enters a valid one
+                    while(!((input <= count) && (input >= 1))){
+                        //While not [a valid input]...
+                        System.out.println("Invalid Menu Input. Try again.");
+                        input = sc.nextInt();
+                    }//while Ends
+                    switch(input)
+                    {
+                        case 1:
+                            String newFirstName = editString();
+                            currentUser.setFirstName(newFirstName);
+                            System.out.println("First Name Changed to: " + newFirstName);
+                            break;
+                        case 2:
+                            String newLastName = editString();
+                            currentUser.setLastName(newLastName);
+                            System.out.println("Last Name Changed to: " + newLastName);
+                            break;
+                        case 3:
+                            String newEmail = editString();
+                            currentUser.setEmail(newEmail);
+                            System.out.println("Email Changed to: " + newEmail);
+                            break;
+                        case 4:
+                            String newPassword = editString();
+                            currentUser.setPassword(newPassword);
+                            System.out.println("Password Changed to: " + newPassword);
+                        case 5:
+                            String newPhoneNumber = editString();
+                            currentUser.setPhone(newPhoneNumber);
+                            System.out.println("Phone Number Changed to: " + newPhoneNumber);
+                            break;
+                        case 6:
+                            editCards();
+                            break;
+                        case 7:
+                            editLocations();
+                            break;
+                        case 8:
+                            input = allOrdersScreen();
+                            break;
+                        case 9:
+                            //Return to home screen.
+                            return 0;
+                        default:
+                            input = -1;
+                            continue;
+                    }
+                }catch(Exception e){
+                    System.out.println("An error has occured. Reason: " + e.getMessage());
+                    System.out.println("An invalid input was likely entered. Returning to Accounts menu.");
+                    System.out.println("(If program does not continue, enter any input to continue.)");
+                    sc.nextLine();
+                    input = -1;
+                    continue;
                 }
                 UserService us = new UserService(con);
                 us.update(currentUser);
-                //accountScreen();
+                input = -1;
             }
-       
-            System.out.println("Shouldn't be here");
-            return -1;
+            System.out.println("Error encountered. Returning to Menu.");
+            return 0;
 	}
 	private static void editLocations()
         {
@@ -945,9 +953,9 @@ public class Tiger{
             System.out.println("Please select the card to edit");
             
             for (int i = 0; i < cards.size(); i++) {
-                System.out.println( (i + 1) + cards.get(i).getCardNumber());
+                System.out.println( (i + 1) + " " + cards.get(i).getCardNumber());
             }
-            System.out.println((cards.size() + 1) + "Go Back");
+            System.out.println((cards.size() + 1) + " Go Back");
             
             input = sc.nextInt();
             sc.nextLine();//flush input buffer
