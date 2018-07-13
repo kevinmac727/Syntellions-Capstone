@@ -15,7 +15,8 @@ public class Order {
 	String delivery_method_id; //varchar
 	String store_id; //varchar
 	String delivery_status_id; //varchar
-	
+	private static int orderSize = 0; 
+        
 	//Array to hold order items rather than the order_items table
 	ArrayList<String> item_ids = new ArrayList<String>();
 
@@ -60,6 +61,7 @@ public class Order {
 		this.item_ids = (ArrayList<String>) item_ids.clone();
 	}
 	public void addItem_id(String item_id){
+                orderSize++;
 		this.item_ids.add(item_id);
 	}
 	public String getOrder_id() {
@@ -159,4 +161,7 @@ public class Order {
                 + "]";
 	}
 	
+        public int getOrderSize(){
+            return orderSize;
+        }
 }

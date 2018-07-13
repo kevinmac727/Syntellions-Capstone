@@ -84,7 +84,7 @@ public class OrderService implements Service<Order>{
 		try{
 			//Add order items
 			CallableStatement statement = connection.prepareCall(
-					"{?=call AddOrder(?,?,?,?,?,?,?,?,?,?)}");
+					"{?=call fn_insert_order(?,?,?,?,?,?,?,?,?,?)}");
 			
 			statement.registerOutParameter(1, Types.VARCHAR);
 			statement.setString("USER_ID",order.getUser_id());

@@ -54,13 +54,14 @@ public class ServiceWrapper {
 	}
 
 	public static void printOptions(ArrayList<String> options){
-		options.add("Go back");
+		//options.add("Go back");
 		int count = 0;
 		for(String option : options) {
 			count++;
 			System.out.println(count + ". " + option);
 		}
-		
+		count++;
+                System.out.println(count + ". Go back");
 	}
 	
 	public static void printMenuItems(ArrayList<Menu> menus){
@@ -70,8 +71,11 @@ public class ServiceWrapper {
 			count++;
 			System.out.println(count + "  . $" + menu.getPrice() + " " + menu.getName());
 		}
-
+                
+                System.out.println(++count + ". Sumbit Order");
 		System.out.println(++count + ". Go back");
+                
+
 	}
         
         /***************************************************************************
