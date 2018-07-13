@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import domain.*;
 import static java.lang.System.in;
 import static java.lang.reflect.Array.get;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,6 +25,7 @@ import services.UserService;
 public class ServiceWrapper {
 	
 	Connection con;
+        static DecimalFormat df = new DecimalFormat("##.##");
     
 	public ServiceWrapper(Connection con) {
 		super();
@@ -111,11 +113,11 @@ public class ServiceWrapper {
 
                int value = mapCount.get(key);
 
-               System.out.println( (x++) +".\t"+(value*key.getPrice())+"\t"+ value + "  \t$" + key.getPrice() + "\t\t" + key.getName());
+               System.out.println( (x++) +".\t$"+df.format((value*key.getPrice()))+"\t$"+ value + "  \t$" + key.getPrice() + "\t\t" + key.getName());
                totalPrice = (totalPrice + (value*key.getPrice()));
           }//for Ends 
 
-          System.out.println("Total: "+ totalPrice);
+          System.out.println("Total: $"+ df.format(totalPrice));
 
          // we dont need count
           System.out.println(x++ + " Go Back");
@@ -135,10 +137,10 @@ public class ServiceWrapper {
             for ( Menu key :mapCount.keySet() )
             {
                 int value = mapCount.get(key);
-                finalOrderString+=(value + " - " + key.getName() + " = $" + value*key.getPrice() + "\n");
+                finalOrderString+=(value + " - " + key.getName() + " = $" + df.format(value*key.getPrice()) + "\n");
                 totalPrice = (totalPrice + (value*key.getPrice()));
             }//for Ends 
-            finalOrderString+=("\nTotal Price: $"+ totalPrice);
+            finalOrderString+=("\nTotal Price: $" + df.format(totalPrice));
           
             return finalOrderString;
     }//makeOrderItemsString() Ends  

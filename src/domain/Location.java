@@ -27,7 +27,7 @@ public class Location {
     }
 
     // The rest of this file is constructer, getters, setters, and toString.
-    public Location(String locationId, String userID, Float taxrate, String street, String city, String country, String state, String zip) {
+    public Location(String locationId, String userID, Float taxrate, String street, String city, String state, String country, String zip) {
         this.locationId = locationId;
         this.userID = userID;
         this.taxrate = taxrate;
