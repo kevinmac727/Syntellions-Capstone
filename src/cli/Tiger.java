@@ -31,6 +31,7 @@ import services.StoreService;
 import services.UserService;
 import services.CardService;
 import services.DeliveryStatusService;
+import services.LocationService;
 import services.Receipt;
 
 public class Tiger{
@@ -41,7 +42,19 @@ public class Tiger{
 	private static Order currentOrder;
 	private static Store currentStore;
         private static HashMap<Menu,Integer> orderSummary; 
-	
+        private static String verticalTab = "\n\n\n\n\n\n\n\n\n\n\n\n\n";
+	private static String STORE_NAME =  "___________\n"                                        
+                         + "___  /___(_)____________\n"                          
+                         + "__  / __  /_  __ \\_  __ \\\n"                          
+                         + "_  /___  / / /_/ /  / / /\n"                          
+                         + "/_____/_/  \\____//_/ /_/\n"                           
+                         + "__________\n"                                         
+                         + "___  ____/___  ____________________________________\n"
+                         + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
+                         + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
+                         + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
+                         + "                /_/";
+        
 	static Scanner sc;
 
 	public static void main(String[] args) {
@@ -63,18 +76,8 @@ public class Tiger{
             int input = -1;
             while(input == -1 || input == 0)
             {
-		System.out.println(
-                           "___________\n"                                        
-                         + "___  /___(_)____________\n"                          
-                         + "__  / __  /_  __ \\_  __ \\\n"                          
-                         + "_  /___  / / /_/ /  / / /\n"                          
-                         + "/_____/_/  \\____//_/ /_/\n"                           
-                         + "__________\n"                                         
-                         + "___  ____/___  ____________________________________\n"
-                         + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
-                         + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
-                         + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
-                         + "                /_/");                                
+		System.out.println(STORE_NAME);     
+                
 		ArrayList<String> options = new ArrayList<String>();
 		options.add("Login");
 		options.add("Register");
@@ -84,10 +87,26 @@ public class Tiger{
 			count++;
 			System.out.println(count + ". " + option);
 		}
+                System.out.println("Make numeric menu selection ");
 		
-	    
-                input = sc.nextInt();
-            
+	       
+                String menuOption = sc.next();
+                while(menuSelectionIsValid(menuOption, '3') == false){
+                    System.out.println(verticalTab);
+                    System.out.print( STORE_NAME);
+                    count = 0;
+                    System.out.println();
+                    for(String option : options) {
+			count++;
+			System.out.println(count + ". " + option);
+                    }//for Ends 
+                    
+                    System.out.println("\nInvalid menu select. Please try again!");
+                    
+                    menuOption = sc.next();
+                }
+                    
+                input = Integer.parseInt(menuOption); 
                 //continue asking for the input until the user enters a valid one
                 while(input  > 3){
                     System.out.println("Invalid Menu Select. try again ");
@@ -96,9 +115,11 @@ public class Tiger{
                 switch(input){
                     case 1:
     			input = loginScreen();
+                        System.out.println(verticalTab);
                         break;
                     case 2:
     			input = registerScreen();
+                        System.out.println(verticalTab);
                         break;
                     case 3:
     			System.out.println("Goodbye");
@@ -109,6 +130,7 @@ public class Tiger{
     			AdminAndManager aam = new AdminAndManager(con);
     			aam.adminScreen();
                         //TEMPORARY HARD CODE, FIX AS SOON AS IT IS POSSIBLE
+                        System.out.println(verticalTab);
                         input = -1;
                         break;
                     default:
@@ -326,7 +348,7 @@ public class Tiger{
                  }//if Ends 
                  
                  else if(input==menus.size()+2) return;
-                 else if(input < menus.size()) menuItemScreen(menus.get(input-1));
+                 else if(input <= menus.size()) menuItemScreen(menus.get(input-1));
                 //Test, unsure if this is proper
             }//while Ends 
             
@@ -925,21 +947,6 @@ public class Tiger{
             System.out.println("Error encountered. Returning to Menu.");
             return 0;
 	}
-	private static void editLocations()
-        {
-		// TODO Auto-generated method stub
-                System.out.println("Please enter new street address");
-                String address = sc.next();
-                System.out.println("Please enter new city");
-                String city = sc.next();
-                System.out.println("Please enter new country");
-                String country = sc.next();
-                System.out.println("Please enter new state");
-                String state = sc.next();
-                System.out.println("Please enter new zip code");
-                String zipCode = sc.next();
-                
-	}
 
 	private static int editCards() 
         {
@@ -1011,7 +1018,77 @@ public class Tiger{
             chosen.setExpiryDate(date);
             //Call SQL statement to update card?
             cs.update(chosen);
+            System.out.println("Card info updated.");
             return 0;//Don't know what is actually supposed to be returned.
+	}
+        
+        private static int editLocations() 
+        {
+            //Fetch locations that the user has
+            LocationService ls = new LocationService(con);
+            ArrayList<Location> userLocations = ls.getUserLocations(currentUser.getUserId());
+            
+            Integer input = -1;
+            while(input < 1 || input > userLocations.size() + 1)
+            {
+                System.out.println("Please select the location to edit");
+                for (int i = 0; i < userLocations.size(); i++) {
+                    System.out.println( (i + 1) + " " + userLocations.get(i).getStreet());
+                }
+                System.out.println((userLocations.size() + 1) + " Go Back");
+                input = sc.nextInt();
+                sc.nextLine();//flush input buffer
+            }
+            if (input == userLocations.size() + 1) {
+                //"Go back" selected, return out
+                return -1;
+            }
+            Location chosen = userLocations.get(input - 1);
+            String locationID;
+            String userID = currentUser.getUserId();
+            Float taxRate;
+            String street;
+            String city;
+            String state;
+            String country;
+            String zipCode;
+            
+            //get values
+            System.out.println("Please enter tax rate (0.00 to 100.00)");
+            taxRate = sc.nextFloat();
+            sc.nextLine(); //Flushing buffer
+            System.out.println("Please enter new street address");
+            street = sc.nextLine();
+            System.out.println("Please enter new city");
+            city = sc.nextLine();
+            System.out.println("Please enter new state");
+            state = sc.nextLine();
+            System.out.println("Please enter new country");
+            country = sc.nextLine();
+            while(true)
+            {
+                System.out.println("Please enter new zip code");
+                String zipInput = sc.nextLine();
+                if (zipInput.length() != 5) {
+                    System.out.println("Invalid zip code input, please try again");
+                }
+                else
+                {
+                    zipCode = zipInput;
+                    break;
+                }
+                
+            }
+            //Set location values
+            chosen.setTaxrate(taxRate);
+            chosen.setStreet(street);
+            chosen.setCity(city);
+            chosen.setState(state);
+            chosen.setCountry(country);
+            chosen.setZip(zipCode);
+            ls.update(chosen);
+            System.out.println("Location info updated.");
+            return 0;
 	}
 
 	private static String editString() 
