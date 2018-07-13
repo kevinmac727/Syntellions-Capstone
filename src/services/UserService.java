@@ -59,7 +59,7 @@ public class UserService implements Service<User>{
 			String password = user.getPassword();
 			String userStatusId = user.getUserStatusId();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_insert_user(?,?,?,?,?,?)}");
+			CallableStatement oCSF = connection.prepareCall("{?=call fn_insert_user(?,?,?,?,?,?)}");
 			oCSF.registerOutParameter(1, Types.VARCHAR);
 			oCSF.setString(2, firstName);
 			oCSF.setString(3, lastName);

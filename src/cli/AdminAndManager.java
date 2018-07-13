@@ -54,7 +54,7 @@ public class AdminAndManager {
 		options.add("Alter Users");
 		options.add("Alter User Statuses");
                 options.add("Exit Application");
-                options.add("Go back");
+                //options.add("Go back");
                 int input = 0;
                 int option;
             while(true){
