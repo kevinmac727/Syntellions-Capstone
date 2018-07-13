@@ -8,23 +8,21 @@ public class UserStatus {
 		super();
 	}
 	
-	public UserStatus(String userStatusId, String userStatus) throws IdException {
+	public UserStatus(String userStatusId, String userStatus) {
 		super();
 		
-        if(userStatusId.length() < 7)
-	           throw new IdException("Id can't be less than 7 characters");
+        
+	         
         
 		this.userStatusId = userStatusId;
 		this.userStatus = userStatus;
 		
-	}
+        }
 	
 	public String getUserStatusId() {
 		return userStatusId;
 	}
-	public void setUserStatusId(String userStatusId) throws IdException {
-        if(userStatusId.length() < 7)
-	           throw new IdException("Id can't be less than 7 characters");
+	public void setUserStatusId(String userStatusId){
         
 		this.userStatusId = userStatusId;
 	}

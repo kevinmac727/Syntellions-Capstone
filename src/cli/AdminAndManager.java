@@ -634,10 +634,8 @@ public class AdminAndManager {
             System.out.println();
             System.out.println("Insert an item ID that doesn't already exist in the database");
             Scanner sc = new Scanner(System.in);
-            sc.nextLine();
             String itemID = sc.nextLine();
             System.out.println("Insert an item type");
-            sc.nextLine();
             String itemName = sc.nextLine();
             
             ItemType itemType = new ItemType(itemID, itemName);
@@ -898,14 +896,10 @@ public class AdminAndManager {
             System.out.println("Add a user status description");
             sc.nextLine();
             String userStatus = sc.nextLine();
-            try{
             UserStatus us = new UserStatus(userStatusID, userStatus);
             uss.add(us);
             System.out.println("User added");
-            }
-            catch(IdException e){
-                e.getMessage();
-            }
+            
         }
 
         public static void deleteUserStatusScreen() {
