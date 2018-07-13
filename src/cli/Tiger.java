@@ -31,6 +31,7 @@ import services.StoreService;
 import services.UserService;
 import services.CardService;
 import services.DeliveryStatusService;
+import services.LocationService;
 import services.Receipt;
 
 public class Tiger{
@@ -925,21 +926,6 @@ public class Tiger{
             System.out.println("Error encountered. Returning to Menu.");
             return 0;
 	}
-	private static void editLocations()
-        {
-		// TODO Auto-generated method stub
-                System.out.println("Please enter new street address");
-                String address = sc.next();
-                System.out.println("Please enter new city");
-                String city = sc.next();
-                System.out.println("Please enter new country");
-                String country = sc.next();
-                System.out.println("Please enter new state");
-                String state = sc.next();
-                System.out.println("Please enter new zip code");
-                String zipCode = sc.next();
-                
-	}
 
 	private static int editCards() 
         {
@@ -1011,7 +997,77 @@ public class Tiger{
             chosen.setExpiryDate(date);
             //Call SQL statement to update card?
             cs.update(chosen);
+            System.out.println("Card info updated.");
             return 0;//Don't know what is actually supposed to be returned.
+	}
+        
+        private static int editLocations() 
+        {
+            //Fetch locations that the user has
+            LocationService ls = new LocationService(con);
+            ArrayList<Location> userLocations = ls.getUserLocations(currentUser.getUserId());
+            
+            Integer input = -1;
+            while(input < 1 || input > userLocations.size() + 1)
+            {
+                System.out.println("Please select the location to edit");
+                for (int i = 0; i < userLocations.size(); i++) {
+                    System.out.println( (i + 1) + " " + userLocations.get(i).getStreet());
+                }
+                System.out.println((userLocations.size() + 1) + " Go Back");
+                input = sc.nextInt();
+                sc.nextLine();//flush input buffer
+            }
+            if (input == userLocations.size() + 1) {
+                //"Go back" selected, return out
+                return -1;
+            }
+            Location chosen = userLocations.get(input - 1);
+            String locationID;
+            String userID = currentUser.getUserId();
+            Float taxRate;
+            String street;
+            String city;
+            String state;
+            String country;
+            String zipCode;
+            
+            //get values
+            System.out.println("Please enter tax rate (0.00 to 100.00)");
+            taxRate = sc.nextFloat();
+            sc.nextLine(); //Flushing buffer
+            System.out.println("Please enter new street address");
+            street = sc.nextLine();
+            System.out.println("Please enter new city");
+            city = sc.nextLine();
+            System.out.println("Please enter new state");
+            state = sc.nextLine();
+            System.out.println("Please enter new country");
+            country = sc.nextLine();
+            while(true)
+            {
+                System.out.println("Please enter new zip code");
+                String zipInput = sc.nextLine();
+                if (zipInput.length() != 5) {
+                    System.out.println("Invalid zip code input, please try again");
+                }
+                else
+                {
+                    zipCode = zipInput;
+                    break;
+                }
+                
+            }
+            //Set location values
+            chosen.setTaxrate(taxRate);
+            chosen.setStreet(street);
+            chosen.setCity(city);
+            chosen.setState(state);
+            chosen.setCountry(country);
+            chosen.setZip(zipCode);
+            ls.update(chosen);
+            System.out.println("Location info updated.");
+            return 0;
 	}
 
 	private static String editString() 
