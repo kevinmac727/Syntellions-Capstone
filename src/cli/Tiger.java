@@ -195,9 +195,14 @@ public class Tiger{
 	    	System.out.println("Registered");
 	    	currentUser = sw.register(first, last, phone, email, password);
 			currentOrder = new Order();
-			currentOrder.setOrder_id(Double.toString(Math.random()* 10001));
+                        OrderService service = new OrderService(con);
+
+                        currentOrder.setOrder_id("" + (service.getMaxOrderID() + 1));
 			currentOrder.setUser_id(currentUser.getUserId());
 			currentOrder.setDelivery_status_id("0");
+                        System.out.println(currentOrder.getUser_id());
+                        StoreService ss = new StoreService(con);
+                        currentStore = ss.getById("0");
 	    	return homeScreen();
 	    }else{
 	    	System.out.println("Mismatching passwords, try again");

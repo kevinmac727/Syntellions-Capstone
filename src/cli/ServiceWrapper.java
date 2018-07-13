@@ -42,13 +42,14 @@ public class ServiceWrapper {
 	
 	public User register(String firstName, String lastName, String phone, String email, String password){
 		//, String street, String city, String state, String country, String zip, String userStatus
-		boolean result = false;
+
 		String userId = Double.toString(Math.random()* 10001);
 		String userStatusId = "0";
 
 		User user = new User(userId,firstName,lastName,phone, email,password,userStatusId);
 		UserService us = new UserService(con);
-		result =  us.add(user);
+		String userID =  us.addUserAutoIncrement(user);
+                user.setUserId(userID);
 		return user;
 	}
 
