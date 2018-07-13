@@ -119,14 +119,11 @@ public class DeliveryStatusService {
     public boolean validateDeliveryDateTime(String date){
         
             try {
-                SimpleDateFormat dateFmt = new SimpleDateFormat("MM-DD-YYYY HH:MM");
+                SimpleDateFormat dateFmt = new SimpleDateFormat("MM-dd-yyyy HH:mm");
                 
                 Date userDate =  dateFmt.parse(date);
                 Date sysDate = new Date();
                 
-                System.out.println(date+" [ "+userDate+" ]");
-                System.out.println(sysDate);
-                System.out.println(sysDate.before(userDate));
                 if(sysDate.after(userDate) == true){
                     
                     System.out.println("INVALID DATE: You selected a previous date/time. Try again!");
@@ -136,6 +133,8 @@ public class DeliveryStatusService {
               //  System.out.print();
             } //validateDeliveryDate() Ends
             catch (ParseException ex) {
+                   System.out.println("INVALID DATE: You used an incorrect date format!");
+
                 return false; 
             }//try-catch Ends 
             

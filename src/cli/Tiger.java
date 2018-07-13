@@ -1,6 +1,7 @@
 package cli;
 
 import domain.Card;
+import domain.Location;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -350,9 +351,14 @@ public class Tiger{
             Scanner scanInput = new Scanner(System.in);
             String menuSelection = "";
             
-            System.out.println("|--------Order summary--------|"); 
+            /**************************************************************************************/
+            /**************************DISPLAY SUMMARY OF SELECTED ITEMS***************************/
+            System.out.println("|--------Items Selected--------|"); 
             viewSummaryOfCurrentOrder();
             
+            
+            /**************************************************************************************/
+            /**************************GET INFORMATION ABOUT THE ORDER************************/
             System.out.println("|------Order Information-------|");
             
             //get the date and time of delivery from the user
@@ -368,7 +374,7 @@ public class Tiger{
             String deliveryDateTime = deliveryDate+ " "+deliveryTime;
             while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
                 //add date to receipt summary
-                System.out.println("INVALID DATE INPUT! TRY AGAIN");
+                 System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
                 deliveryDate = scanInput.nextLine();
                 
                 System.out.println("\nEnter Delivery time [HH:MM]: "); 
@@ -378,7 +384,9 @@ public class Tiger{
             }//if Ends 
 
             
- 
+            
+            /**************************************************************************************/
+            /**************************SELECT DELIVERY METHOD******************************************/
             /**Display methods of delivery  for the user to choose from****/
             System.out.println("\nSelect Delivery method"); 
             showDeliverMethods();
@@ -394,9 +402,28 @@ public class Tiger{
              
             /**Enter delivery instruction***/ 
             System.out.println("\nEnter Delivery Instruction: "); 
-            currentOrder.setInstuctions(new Scanner(System.in).nextLine());
+            currentOrder.setInstuctions(scanInput.nextLine());
+            
+            /**************************************************************************************/
+            /**************************GET USER'S Delivery location LOCATION******************************************/
+            Location location  = new Location();
+            
+            System.out.println("Please enter your address information\n");
+            String city, street, zipCode; 
+            
+            System.out.print("Street: ");
+            location.setStreet(scanInput.nextLine());
+            
+            System.out.print("City: ");
+            location.setCity(scanInput.nextLine());
+            
+            System.out.print("Zip: ");
+            location.setZip(scanInput.nextLine());
+            location.setState("AZ \n");
             
             
+            /**************************************************************************************/
+            /**************************GET USER'S PAYMENT******************************************/
             /**Process user's payment**/
             System.out.println("Select Method of Payment");
             System.out.println("1. Cash");
@@ -536,7 +563,7 @@ public class Tiger{
             else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals("no") || receiptPick.equals("No"))
             {
                 System.out.println("Thank you for choosing Lion Express!");
-            }
+            }//else if Ends 
             
             
         }//collectOrderInfoScreen() Ends 
