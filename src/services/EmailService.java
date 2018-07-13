@@ -21,15 +21,15 @@ public class EmailService
         }
         else
         {
-            messageEmail = "Your receipt can be found below:\n ";
+            messageEmail = "Thank you for choosing Lion Express!\n " + "Your receipt can be found below:\n ";
             subjectEmail = "Order Receipt";
         }
        
         try
         {
             String host ="smtp.gmail.com" ;
-            String user = "testingjavasyntel@gmail.com";
-            String pass = "#pass123";
+            String user = "LionExpressFood@gmail.com";
+            String pass = "syntellions231";
             String to = email;
             String from = "testingjavasyntel@gmail.com";
             String subject = subjectEmail;
