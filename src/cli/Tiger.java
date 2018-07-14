@@ -42,7 +42,7 @@ public class Tiger{
 	private static Order currentOrder;
 	private static Store currentStore;
         private static HashMap<Menu,Integer> orderSummary; 
-        private static String verticalTab = "\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        private static String verticalTab = "\n\n\n\n\n\n\n\n\n";
 	private static String STORE_NAME =  "___________\n"                                        
                          + "___  /___(_)____________\n"                          
                          + "__  / __  /_  __ \\_  __ \\\n"                          
@@ -53,7 +53,7 @@ public class Tiger{
                          + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
                          + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
                          + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
-                         + "                /_/";
+                         + "                /_/\n\n";
         
 	static Scanner sc;
 
@@ -87,7 +87,7 @@ public class Tiger{
 			count++;
 			System.out.println(count + ". " + option);
 		}
-                System.out.println("Make numeric menu selection ");
+                System.out.println("~(Please make numeric menu selection!)~");
 		
 	       
                 String menuOption = sc.next();
@@ -146,13 +146,14 @@ public class Tiger{
 		System.out.println("\n*Login*");
 		System.out.println("Enter email:");
 	    String email = sc.next();
-		System.out.println("Enter password:");
+		System.out.println("\nEnter password:");
 	    String password = sc.next();
 	    
 		UserService us = new UserService(con);
 		User candidate = us.getByEmail(email);
 		if(candidate == null){
-			System.out.println("Wrong email");
+			System.out.println("\n\n\n\n  /// --  Wrong email!  -- \\\\\\");
+                        System.out.println("/// --  Please try again.  -- \\\\\\");
                         return -1;
 			//firstScreen();
 		}
@@ -175,7 +176,8 @@ public class Tiger{
                         }
 	    }
 	    else{
-	    	System.out.println("Wrong email or password");
+	    	System.out.println("\n\n\n\n/// --  Wrong email or password!  -- \\\\\\");
+                System.out.println("   /// --  Please try again.  -- \\\\\\");
 	    	try {
 				TimeUnit.SECONDS.sleep(1);
                                 
@@ -240,7 +242,7 @@ public class Tiger{
 
 	public static int homeScreen(){
             //Outside loop because it should only display on initial entry
-            System.out.println("Welcome " + currentUser.getFirstName() + "!");
+            System.out.println("\nWelcome " + currentUser.getFirstName() + "!");
             
             if(currentUser.getUserStatusId().equals("0"))
              {
@@ -396,13 +398,13 @@ public class Tiger{
             
             /**************************************************************************************/
             /**************************DISPLAY SUMMARY OF SELECTED ITEMS***************************/
-            System.out.println("|--------Items Selected--------|"); 
+            System.out.println("\n|--------Items Selected--------|"); 
             viewSummaryOfCurrentOrder();
             
             
             /**************************************************************************************/
             /**************************GET INFORMATION ABOUT THE ORDER************************/
-            System.out.println("|------Order Information-------|");
+            System.out.println("\n|------Order Information-------|");
             
             //get the date and time of delivery from the user
             DeliveryStatusService dstatus = new DeliveryStatusService();
@@ -442,17 +444,17 @@ public class Tiger{
                  menuSelection = scanInput.next();
                  menuSelection = menuSelection.trim();
             }//while Ends 
-            currentOrder.setDelivery_method_id((""+(Integer.parseInt(menuSelection)-1)));
-             
-            /**Enter delivery instruction***/ 
-            System.out.println("\nEnter Delivery Instruction: "); 
+
+            scanInput.nextLine();  
+            /**Enter order instructions***/ 
+            System.out.println("\nEnter order instructions:"); 
             currentOrder.setInstuctions(scanInput.nextLine());
             
             /**************************************************************************************/
             /**************************GET USER'S Delivery location LOCATION******************************************/
             Location location  = new Location();
             
-            System.out.println("Please enter your address information\n");
+            System.out.println("\nPlease enter your address information\n");
             String city, street, zipCode; 
             
             System.out.print("Street: ");
@@ -469,7 +471,7 @@ public class Tiger{
             /**************************************************************************************/
             /**************************GET USER'S PAYMENT******************************************/
             /**Process user's payment**/
-            System.out.println("Select Method of Payment");
+            System.out.println("\nSelect Method of Payment");
             System.out.println("1. Cash");
             System.out.println("2. Credit/Debit");
             menuSelection = scanInput.next();
@@ -584,8 +586,9 @@ public class Tiger{
             
             ServiceWrapper sw = new ServiceWrapper(con);
             sw.submitOrder(currentOrder);
-            
+
             System.out.println("Order Transaction Completed. Thank you");
+
             
             System.out.println("|------Summary of you Receipt-----|");
             viewSummaryOfCurrentOrder();
@@ -598,8 +601,8 @@ public class Tiger{
                                 || receiptPick.equals("Yes"))
                              {           
                 
-                System.out.println("Thank you for submitting your order!");
-                System.out.println("We will now send you an email containing your receipt...");
+                System.out.println("\nThank you for submitting your order!");
+                System.out.println("We will now send you an email containing your receipt...\n");
 
                 // String that is sent as Email message
                 String receipt = "\nOrder ID: " + currentOrder.getOrder_id() + 
@@ -619,7 +622,7 @@ public class Tiger{
             else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals
                 ("no") || receiptPick.equals("No"))
             {
-                System.out.println("Thank you for choosing Lion Express!");
+                System.out.println("\nThank you for choosing Lion Express!");
             }
             
             

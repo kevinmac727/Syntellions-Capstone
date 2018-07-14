@@ -113,14 +113,14 @@ public class ServiceWrapper {
 
                int value = mapCount.get(key);
 
-               System.out.println( (x++) +".\t$"+df.format((value*key.getPrice()))+"\t$"+ value + "  \t$" + key.getPrice() + "\t\t" + key.getName());
+               System.out.println( (x++) +".\t$"+df.format((value*key.getPrice()))+"\t"+ value + "  \t$" + key.getPrice() + "\t\t" + key.getName());
                totalPrice = (totalPrice + (value*key.getPrice()));
           }//for Ends 
 
           System.out.println("Total: $"+ df.format(totalPrice));
 
          // we dont need count
-          System.out.println(x++ + " Go Back");
+          System.out.println(x++ + " Go Back\n");
           
           return mapCount;
           
@@ -137,7 +137,7 @@ public class ServiceWrapper {
             for ( Menu key :mapCount.keySet() )
             {
                 int value = mapCount.get(key);
-                finalOrderString+=(value + " - " + key.getName() + " = $" + df.format(value*key.getPrice()) + "\n");
+                finalOrderString+=("$" + df.format(value*key.getPrice()) + " --- " + value + " --- " + key.getName() + " --- $" + key.getPrice() + " each \n");
                 totalPrice = (totalPrice + (value*key.getPrice()));
             }//for Ends 
             finalOrderString+=("\nTotal Price: $" + df.format(totalPrice));
