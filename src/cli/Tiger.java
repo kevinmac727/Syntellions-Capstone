@@ -116,6 +116,7 @@ public class Tiger{
                     case 1:
     			input = loginScreen();
                         System.out.println(verticalTab);
+                        System.out.println(verticalTab);
                         break;
                     case 2:
     			input = registerScreen();
@@ -177,7 +178,9 @@ public class Tiger{
 	    	System.out.println("Wrong email or password");
 	    	try {
 				TimeUnit.SECONDS.sleep(1);
+                                
                                 return -1;
+                                
 				//firstScreen();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -439,6 +442,7 @@ public class Tiger{
                  menuSelection = scanInput.next();
                  menuSelection = menuSelection.trim();
             }//while Ends 
+            currentOrder.setDelivery_method_id((""+(Integer.parseInt(menuSelection)-1)));
              
             /**Enter delivery instruction***/ 
             System.out.println("\nEnter Delivery Instruction: "); 
@@ -580,6 +584,7 @@ public class Tiger{
             
             ServiceWrapper sw = new ServiceWrapper(con);
             sw.submitOrder(currentOrder);
+            
             System.out.println("Order Transaction Completed. Thank you");
             
             System.out.println("|------Summary of you Receipt-----|");
