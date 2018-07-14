@@ -21,6 +21,7 @@ public class Location {
     String country;
     String state;
     String zip;
+    private int isSaved;
 
     public Location() {
         super();
@@ -36,6 +37,19 @@ public class Location {
         this.country = country;
         this.state = state;
         this.zip = zip;
+    }
+    
+        // The rest of this file is constructer, getters, setters, and toString.
+    public Location(String locationId, String userID, Float taxrate, String street, String city, String state, String country, String zip, int isSaved) {
+        this.locationId = locationId;
+        this.userID = userID;
+        this.taxrate = taxrate;
+        this.street = street;
+        this.city = city;
+        this.country = country;
+        this.state = state;
+        this.zip = zip;
+        this.isSaved = this.isSaved;
     }
 
     public String getLocationId() {
@@ -105,5 +119,14 @@ public class Location {
     @Override
     public String toString() {
         return "Location{" + "locationId=" + locationId + ", userID=" + userID + ", taxrate=" + taxrate + ", street=" + street + ", city=" + city + ", country=" + country + ", state=" + state + ", zip=" + zip + '}';
+    }
+
+    public void setIsSaved(int isaved) {
+        
+        this.isSaved = isaved;
+    }
+
+    public int getSaveState() {
+        return isSaved;
     }
 }

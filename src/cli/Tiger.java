@@ -402,32 +402,11 @@ public class Tiger{
             viewSummaryOfCurrentOrder();
             
             
-            /**************************************************************************************/
+            /**********************************************************************************/
             /**************************GET INFORMATION ABOUT THE ORDER************************/
             System.out.println("\n|------Order Information-------|");
             
-            //get the date and time of delivery from the user
-            DeliveryStatusService dstatus = new DeliveryStatusService();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
-            
-            System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
-            String deliveryDate = scanInput.nextLine();
-            
-            System.out.println("\nEnter Delivery time [HH:MM]: "); 
-            String deliveryTime = scanInput.nextLine();
-            
-            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
-            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
-                //add date to receipt summary
-                 System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
-                deliveryDate = scanInput.nextLine();
-                
-                System.out.println("\nEnter Delivery time [HH:MM]: "); 
-                deliveryTime = scanInput.nextLine();
-                
-                deliveryDateTime = deliveryDate+ " "+deliveryTime;
-            }//if Ends 
-
+             currentOrder.setDelivery_timestamp(getUserDeliverDateTime(scanInput));
             
             
             /**************************************************************************************/
@@ -453,6 +432,7 @@ public class Tiger{
             /**************************************************************************************/
             /**************************GET USER'S Delivery location LOCATION******************************************/
             Location location  = new Location();
+            LocationService locationSvc = new LocationService(con); 
             
             System.out.println("\nPlease enter your address information\n");
             String city, street, zipCode; 
@@ -467,7 +447,22 @@ public class Tiger{
             location.setZip(scanInput.nextLine());
             location.setState("AZ \n");
             
+            location.setUserID(currentUser.getUserId());
+            location.setCountry("USA");
+           
             
+            System.out.println("Do you want to save this address? ");
+            System.out.println("(Enter 'Y' for Yes, else press any key)");
+            menuSelection = scanInput.next(); 
+            
+            if(menuSelection.equalsIgnoreCase("y")){
+                location.setIsSaved(1); 
+            }else{
+                location.setIsSaved(0);
+            }
+            
+             locationSvc.add(location);
+             
             /**************************************************************************************/
             /**************************GET USER'S PAYMENT******************************************/
             /**Process user's payment**/
@@ -566,8 +561,13 @@ public class Tiger{
                     }//while Ends
                      newCard.setSecurityCode(securityCode);
                      
+                     newCard.setCardId( ""+System.currentTimeMillis());
+                     
                     //ask user if he/she would like to save this card 
-                    System.out.println("Do you want to save this card?");
+                    System.out.println("Do you want to save this card? \n[Enter [y] for 'yes', else press any other key]");
+                    if( scanInput.next().equalsIgnoreCase("y")){
+                        cardSv.add(newCard);
+                    }//if Ends 
                     
                 }//if (usingExistingCard == false)
                 
@@ -722,9 +722,10 @@ public class Tiger{
     			System.out.println("Tip Changed to: $" + newTip);
                         break;
                     case 2:
-                        int newDelivery_timestamp = Integer.parseInt(editString());
-    			currentOrder.setDelivery_timestamp(newDelivery_timestamp);
-    			System.out.println("Delivery Time Changed to: " + newDelivery_timestamp);
+                        Long newDate = getUserDeliverDateTime(sc);
+                        currentOrder.setDelivery_timestamp(newDate);
+                        
+    			System.out.println("Delivery Time Changed to: " + new Date(newDate));
                         break;
                     case 3:
                         String newInstructions = new Scanner( System.in).nextLine();
@@ -1192,4 +1193,38 @@ public class Tiger{
             return !(selection.length()>1 ||
                  (selection.charAt(0) < '1' || selection.charAt(0) > maxIndex)); 
         }//menuSelectionIsValid() Ends 
+        
+        
+        public static Long getUserDeliverDateTime(Scanner scanInput){
+                       //get the date and time of delivery from the user
+            DeliveryStatusService dstatus = new DeliveryStatusService();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
+            
+            System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
+            String deliveryDate = scanInput.nextLine();
+            
+            System.out.println("\nEnter Delivery time [HH:MM]: "); 
+            String deliveryTime = scanInput.nextLine();
+            
+            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
+                //add date to receipt summary
+                 System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
+                deliveryDate = scanInput.nextLine();
+                
+                System.out.println("\nEnter Delivery time [HH:MM]: "); 
+                deliveryTime = scanInput.nextLine();
+                
+                deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            }//if Ends 
+            
+            Long timeStamp = 0L;
+            try {
+                timeStamp = dateFormat.parse(deliveryDateTime).getTime();
+            } catch (ParseException ex) {
+                Logger.getLogger(Tiger.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return  timeStamp;
+        }//getUserDeliverDateTime() Ends 
 }
