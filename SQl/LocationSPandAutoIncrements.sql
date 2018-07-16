@@ -10,11 +10,11 @@ START WITH 10
 INCREMENT BY 1
 CACHE 10; 
 
-create or replace procedure SP_INSERT_LOCATION(userID varchar2, tax number, street varchar2,city varchar2, locationState varchar2, country varchar2, zip varchar2)
+create or replace procedure SP_INSERT_LOCATION(userID varchar2, tax number, street varchar2,city varchar2, locationState varchar2, country varchar2, zip varchar2, isave number)
 as
 begin
   insert into locations
-  values(seq_location.nextval, userID, tax, street, city, locationState, country, zip);
+  values(seq_location.nextval, userID, tax, street, city, locationState, country, zip, isave);
 end SP_INSERT_LOCATION;
 
 create or replace procedure sp_insert_user(user_id varchar, first varchar, last varchar, phone varchar, email varchar, password varchar, user_status_id varchar)

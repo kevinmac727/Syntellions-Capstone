@@ -1,29 +1,34 @@
 package domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Order {
 	
-	String order_id; //varchar
-	String user_id; //varchar
-	float tip; //number(5,2)
-	float total_price;//number(7,2)
-	int placed_timestamp; //int
-	int delivery_timestamp; //int
-	String card_id; //varchar
-	String instuctions; //carchar
-	String delivery_method_id; //varchar
-	String store_id; //varchar
-	String delivery_status_id; //varchar
+	private String order_id; //varchar
+	private String user_id; //varchar
+	private float tip; //number(5,2)
+	private float total_price;//number(7,2)
+	private Long placed_timestamp; //int
+	private Long delivery_timestamp; //int
+	private String card_id; //varchar
+	private String instuctions; //carchar
+	private String delivery_method_id; //varchar
+	private String store_id; //varchar
+	private String delivery_status_id; //varchar
 	private static int orderSize = 0; 
-        
+        private SimpleDateFormat sDateFormater = new SimpleDateFormat("MM-dd-yyyy HH:mm");
 	//Array to hold order items rather than the order_items table
-	ArrayList<String> item_ids = new ArrayList<String>();
+	private ArrayList<String> item_ids = new ArrayList<String>();
 
 	
 	
-	public Order(String order_id, String user_id, float tip, float total_price, int placed_timestamp,
-			int delivery_timestamp, String card_id, String instuctions, String delivery_method_id, String store_id,
+	public Order(String order_id, String user_id, float tip, float total_price, Long placed_timestamp,
+			Long delivery_timestamp, String card_id, String instuctions, String delivery_method_id, String store_id,
 			String delivery_status_id, ArrayList<String> item_ids) {
 		super();
 		this.order_id = order_id;
@@ -44,8 +49,8 @@ public class Order {
 		super();
 		this.tip = 0;
 		this.total_price = 0;
-		this.placed_timestamp = 0;
-		this.delivery_timestamp = 0;
+		this.placed_timestamp = new Date().getTime();
+		this.delivery_timestamp = null;
 		this.instuctions = "";
 		this.delivery_method_id = "0";
 		this.store_id = "0";
@@ -96,20 +101,22 @@ public class Order {
 		this.total_price = total_price;
 	}
 
-	public int getPlaced_timestamp() {
+	public Long getPlaced_timestamp() {
 		return placed_timestamp;
 	}
 
-	public void setPlaced_timestamp(int placed_timestamp) {
-		this.placed_timestamp = placed_timestamp;
+	public void setPlaced_timestamp(Long placed_timestamp) {
+            
+           this.placed_timestamp = placed_timestamp;
 	}
 
-	public int getDelivery_timestamp() {
+	public Long getDelivery_timestamp() {
 		return delivery_timestamp;
 	}
 
-	public void setDelivery_timestamp(int delivery_timestamp) {
-		this.delivery_timestamp = delivery_timestamp;
+	public void setDelivery_timestamp(Long delivery_timestamp) {
+                
+            this.delivery_timestamp = delivery_timestamp;
 	}
 
 	public String getCard_id() {

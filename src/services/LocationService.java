@@ -24,22 +24,26 @@ public class LocationService implements Service<Location>{
         @Override
 	public boolean add(Location location){
 		try{
-			String locationId = location.getLocationId();
+			String userId = location.getUserID();
 			String street = location.getStreet();
 			String city = location.getCity();
 			String state = location.getState();
 			String country = location.getCountry();
 			String zip = location.getZip();
+			int saveState = location.getSaveState();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_insert_location(?,?,?,?,?)}");
-			oCSF.setString(2, locationId);
+			CallableStatement oCSF = connection.prepareCall("{call sp_insert_location(?,?,?,?,?,?,?,?)}");
+			oCSF.setString(1,userId);
+			oCSF.setDouble(2, 2.30);
 			oCSF.setString(3, street);
 			oCSF.setString(4, city);
 			oCSF.setString(5, state);
 			oCSF.setString(6, country);
 			oCSF.setString(7, zip);
+			oCSF.setInt(8, saveState);
 			oCSF.execute();
 			oCSF.close();
+                        
 			return true;
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
@@ -102,7 +106,8 @@ public class LocationService implements Service<Location>{
 						locationsRs.getString(5),
 						locationsRs.getString(6),
                                                 locationsRs.getString(7),  
-                                                locationsRs.getString(8)
+                                                locationsRs.getString(8),
+                                                locationsRs.getInt(9)
 						); 
 				locations.add(location);
 			}

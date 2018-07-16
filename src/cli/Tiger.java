@@ -42,7 +42,7 @@ public class Tiger{
 	private static Order currentOrder;
 	private static Store currentStore;
         private static HashMap<Menu,Integer> orderSummary; 
-        private static String verticalTab = "\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        private static String verticalTab = "\n\n\n\n\n\n\n\n\n";
 	private static String STORE_NAME =  "___________\n"                                        
                          + "___  /___(_)____________\n"                          
                          + "__  / __  /_  __ \\_  __ \\\n"                          
@@ -53,7 +53,7 @@ public class Tiger{
                          + "__  __/  __  |/_/__  __ \\_  ___/  _ \\_  ___/_  ___/\n"
                          + "_  /___  __>  < __  /_/ /  /   /  __/(__  )_(__  )\n"
                          + "/_____/  /_/|_| _  .___//_/    \\___//____/ /____/\n" 
-                         + "                /_/";
+                         + "                /_/\n\n";
         
 	static Scanner sc;
 
@@ -87,7 +87,7 @@ public class Tiger{
 			count++;
 			System.out.println(count + ". " + option);
 		}
-                System.out.println("Make numeric menu selection ");
+                System.out.println("~(Please make numeric menu selection!)~");
 		
 	       
                 String menuOption = sc.next();
@@ -115,6 +115,7 @@ public class Tiger{
                 switch(input){
                     case 1:
     			input = loginScreen();
+                        System.out.println(verticalTab);
                         System.out.println(verticalTab);
                         break;
                     case 2:
@@ -145,13 +146,14 @@ public class Tiger{
 		System.out.println("\n*Login*");
 		System.out.println("Enter email:");
 	    String email = sc.next();
-		System.out.println("Enter password:");
+		System.out.println("\nEnter password:");
 	    String password = sc.next();
 	    
 		UserService us = new UserService(con);
 		User candidate = us.getByEmail(email);
 		if(candidate == null){
-			System.out.println("Wrong email");
+			System.out.println("\n\n\n\n  /// --  Wrong email!  -- \\\\\\");
+                        System.out.println("/// --  Please try again.  -- \\\\\\");
                         return -1;
 			//firstScreen();
 		}
@@ -174,10 +176,13 @@ public class Tiger{
                         }
 	    }
 	    else{
-	    	System.out.println("Wrong email or password");
+	    	System.out.println("\n\n\n\n/// --  Wrong email or password!  -- \\\\\\");
+                System.out.println("   /// --  Please try again.  -- \\\\\\");
 	    	try {
 				TimeUnit.SECONDS.sleep(1);
+                                
                                 return -1;
+                                
 				//firstScreen();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -237,7 +242,7 @@ public class Tiger{
 
 	public static int homeScreen(){
             //Outside loop because it should only display on initial entry
-            System.out.println("Welcome " + currentUser.getFirstName() + "!");
+            System.out.println("\nWelcome " + currentUser.getFirstName() + "!");
             
             if(currentUser.getUserStatusId().equals("0"))
              {
@@ -393,36 +398,15 @@ public class Tiger{
             
             /**************************************************************************************/
             /**************************DISPLAY SUMMARY OF SELECTED ITEMS***************************/
-            System.out.println("|--------Items Selected--------|"); 
+            System.out.println("\n|--------Items Selected--------|"); 
             viewSummaryOfCurrentOrder();
             
             
-            /**************************************************************************************/
+            /**********************************************************************************/
             /**************************GET INFORMATION ABOUT THE ORDER************************/
-            System.out.println("|------Order Information-------|");
+            System.out.println("\n|------Order Information-------|");
             
-            //get the date and time of delivery from the user
-            DeliveryStatusService dstatus = new DeliveryStatusService();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
-            
-            System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
-            String deliveryDate = scanInput.nextLine();
-            
-            System.out.println("\nEnter Delivery time [HH:MM]: "); 
-            String deliveryTime = scanInput.nextLine();
-            
-            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
-            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
-                //add date to receipt summary
-                 System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
-                deliveryDate = scanInput.nextLine();
-                
-                System.out.println("\nEnter Delivery time [HH:MM]: "); 
-                deliveryTime = scanInput.nextLine();
-                
-                deliveryDateTime = deliveryDate+ " "+deliveryTime;
-            }//if Ends 
-
+             currentOrder.setDelivery_timestamp(getUserDeliverDateTime(scanInput));
             
             
             /**************************************************************************************/
@@ -439,16 +423,18 @@ public class Tiger{
                  menuSelection = scanInput.next();
                  menuSelection = menuSelection.trim();
             }//while Ends 
-             
-            /**Enter delivery instruction***/ 
-            System.out.println("\nEnter Delivery Instruction: "); 
+
+            scanInput.nextLine();  
+            /**Enter order instructions***/ 
+            System.out.println("\nEnter order instructions:"); 
             currentOrder.setInstuctions(scanInput.nextLine());
             
             /**************************************************************************************/
             /**************************GET USER'S Delivery location LOCATION******************************************/
             Location location  = new Location();
+            LocationService locationSvc = new LocationService(con); 
             
-            System.out.println("Please enter your address information\n");
+            System.out.println("\nPlease enter your address information\n");
             String city, street, zipCode; 
             
             System.out.print("Street: ");
@@ -461,11 +447,26 @@ public class Tiger{
             location.setZip(scanInput.nextLine());
             location.setState("AZ \n");
             
+            location.setUserID(currentUser.getUserId());
+            location.setCountry("USA");
+           
             
+            System.out.println("Do you want to save this address? ");
+            System.out.println("(Enter 'Y' for Yes, else press any key)");
+            menuSelection = scanInput.next(); 
+            
+            if(menuSelection.equalsIgnoreCase("y")){
+                location.setIsSaved(1); 
+            }else{
+                location.setIsSaved(0);
+            }
+            
+             locationSvc.add(location);
+             
             /**************************************************************************************/
             /**************************GET USER'S PAYMENT******************************************/
             /**Process user's payment**/
-            System.out.println("Select Method of Payment");
+            System.out.println("\nSelect Method of Payment");
             System.out.println("1. Cash");
             System.out.println("2. Credit/Debit");
             menuSelection = scanInput.next();
@@ -560,8 +561,13 @@ public class Tiger{
                     }//while Ends
                      newCard.setSecurityCode(securityCode);
                      
+                     newCard.setCardId( ""+System.currentTimeMillis());
+                     
                     //ask user if he/she would like to save this card 
-                    System.out.println("Do you want to save this card?");
+                    System.out.println("Do you want to save this card? \n[Enter [y] for 'yes', else press any other key]");
+                    if( scanInput.next().equalsIgnoreCase("y")){
+                        cardSv.add(newCard);
+                    }//if Ends 
                     
                 }//if (usingExistingCard == false)
                 
@@ -580,7 +586,9 @@ public class Tiger{
             
             ServiceWrapper sw = new ServiceWrapper(con);
             sw.submitOrder(currentOrder);
+
             System.out.println("Order Transaction Completed. Thank you");
+
             
             System.out.println("|------Summary of you Receipt-----|");
             viewSummaryOfCurrentOrder();
@@ -593,8 +601,8 @@ public class Tiger{
                                 || receiptPick.equals("Yes"))
                              {           
                 
-                System.out.println("Thank you for submitting your order!");
-                System.out.println("We will now send you an email containing your receipt...");
+                System.out.println("\nThank you for submitting your order!");
+                System.out.println("We will now send you an email containing your receipt...\n");
 
                 // String that is sent as Email message
                 String receipt = "\nOrder ID: " + currentOrder.getOrder_id() + 
@@ -614,7 +622,7 @@ public class Tiger{
             else if (receiptPick.equals("N") || receiptPick.equals("n") || receiptPick.equals
                 ("no") || receiptPick.equals("No"))
             {
-                System.out.println("Thank you for choosing Lion Express!");
+                System.out.println("\nThank you for choosing Lion Express!");
             }
             
             
@@ -714,9 +722,10 @@ public class Tiger{
     			System.out.println("Tip Changed to: $" + newTip);
                         break;
                     case 2:
-                        int newDelivery_timestamp = Integer.parseInt(editString());
-    			currentOrder.setDelivery_timestamp(newDelivery_timestamp);
-    			System.out.println("Delivery Time Changed to: " + newDelivery_timestamp);
+                        Long newDate = getUserDeliverDateTime(sc);
+                        currentOrder.setDelivery_timestamp(newDate);
+                        
+    			System.out.println("Delivery Time Changed to: " + new Date(newDate));
                         break;
                     case 3:
                         String newInstructions = new Scanner( System.in).nextLine();
@@ -1184,4 +1193,38 @@ public class Tiger{
             return !(selection.length()>1 ||
                  (selection.charAt(0) < '1' || selection.charAt(0) > maxIndex)); 
         }//menuSelectionIsValid() Ends 
+        
+        
+        public static Long getUserDeliverDateTime(Scanner scanInput){
+                       //get the date and time of delivery from the user
+            DeliveryStatusService dstatus = new DeliveryStatusService();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY HH:MM");
+            
+            System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
+            String deliveryDate = scanInput.nextLine();
+            
+            System.out.println("\nEnter Delivery time [HH:MM]: "); 
+            String deliveryTime = scanInput.nextLine();
+            
+            String deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            while(dstatus.validateDeliveryDateTime(deliveryDateTime) == false){
+                //add date to receipt summary
+                 System.out.println("\nEnter Delivery date [MM-DD-YYYY]: ");
+                deliveryDate = scanInput.nextLine();
+                
+                System.out.println("\nEnter Delivery time [HH:MM]: "); 
+                deliveryTime = scanInput.nextLine();
+                
+                deliveryDateTime = deliveryDate+ " "+deliveryTime;
+            }//if Ends 
+            
+            Long timeStamp = 0L;
+            try {
+                timeStamp = dateFormat.parse(deliveryDateTime).getTime();
+            } catch (ParseException ex) {
+                Logger.getLogger(Tiger.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return  timeStamp;
+        }//getUserDeliverDateTime() Ends 
 }
