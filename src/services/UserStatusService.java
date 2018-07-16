@@ -21,15 +21,15 @@ public class UserStatusService implements Service<UserStatus>{
 		super();
 		this.connection = connection;
 	}
-	
+	@Override
 	public boolean add(UserStatus userStatus) {
 		try{
 			String userStatusId = userStatus.getUserStatusId();
 			String userStatusName = userStatus.getUserStatus();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_insert_user_status(?,?)}");
-			oCSF.setString(2,userStatusId);
-			oCSF.setString(3, userStatusName);
+			CallableStatement oCSF = connection.prepareCall("{call sp_insert_user_status(?,?)}");
+			oCSF.setString(1,userStatusId);
+			oCSF.setString(2, userStatusName);
 			oCSF.execute();
 			oCSF.close();
 			return true;
@@ -51,7 +51,7 @@ public class UserStatusService implements Service<UserStatus>{
 		
 		try{
 			Statement usersSt = connection.createStatement();
-			ResultSet usersRs = usersSt.executeQuery("Select * from Users where user_id = " + id);
+			ResultSet usersRs = usersSt.executeQuery("Select * from user_statuses where user_status_id = " + id);
 			
 			usersRs.next();
 			userStatus = new UserStatus(
@@ -69,7 +69,7 @@ public class UserStatusService implements Service<UserStatus>{
 		
 		try{
 			Statement userStatusesSt = connection.createStatement();
-			ResultSet userStatusesRs = userStatusesSt.executeQuery("Select * from Users");
+			ResultSet userStatusesRs = userStatusesSt.executeQuery("Select * from User_Statuses");
 			
 			while(userStatusesRs.next()){
 				UserStatus userStatus = new UserStatus(
@@ -88,9 +88,9 @@ public class UserStatusService implements Service<UserStatus>{
 			String userStatusId = userStatus.getUserStatusId();
 			String userStatusName = userStatus.getUserStatus();
 			
-			CallableStatement oCSF = connection.prepareCall("{?=call sp_update_user_status(?,?)}");
-			oCSF.setString(2,userStatusId);
-			oCSF.setString(3, userStatusName);
+			CallableStatement oCSF = connection.prepareCall("{call sp_update_user_status(?,?)}");
+			oCSF.setString(1,userStatusId);
+			oCSF.setString(2, userStatusName);
 			oCSF.execute();
 			oCSF.close();
 		}catch(SQLException e){

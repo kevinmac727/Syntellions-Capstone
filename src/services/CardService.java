@@ -183,7 +183,7 @@ public class CardService implements Service<Card>{
          */
         public boolean validateCreditCard(String creditCardNumber){
             
-            if(creditCardNumber.length() < 15 && creditCardNumber.length() > 16){
+            if(creditCardNumber.length() != 16){
                 return false; 
             }//if Ends 
             for(char c : creditCardNumber.toCharArray()){

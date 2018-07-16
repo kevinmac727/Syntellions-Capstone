@@ -243,26 +243,46 @@ public class AdminAndManager {
 
 	//Doesn't work
 	public static void addCardScreen(){
+            	System.out.println("List of cards");
+		CardService cs = new CardService(con);
+		ArrayList<Card> cl = cs.getAll();
+		int count=1;
+		for(Card c:cl){
+			System.out.println(count + ": " + c.getCardNumber());
+			count++;
+		}
+		System.out.println("Enter the number of the card you'd like to alter");
 		System.out.println("Add a Credit Card");
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\nEnter Card id: ");
-	    String cardId= sc.next();
-	    System.out.println("\nEnter id of user this card belongs to: ");
+                String cardId= sc.next();
+                System.out.println("\nEnter id of user this card belongs to: ");
 		String userId= sc.next();
 		System.out.println("\nEnter Card number: ");
 		String cardNumber= sc.next();
-		System.out.println("\nEnter expiration year: ");
-		int year = sc.nextInt();
-		System.out.println("\nEnter expiration month: ");
-		int month = sc.nextInt();
-		System.out.println("\nEnter expiration date: ");
-		int day = sc.nextInt();
-		Date expiryDate= new Date(year, month, day);
-		System.out.println("Enter Security code: ");
-		String securityCode= sc.next();
+                System.out.println(cardNumber.length());
+                while(!cs.validateCreditCard(cardNumber)){
+                    System.out.println("Invalid Card Number. Number must be 16 digits.");
+                    cardNumber = sc.next();
+                }
+                Date expiryDate;
+                int year;
+                int month;
+
+                    System.out.println("\nEnter expiration year: ");
+                    year = sc.nextInt();
+                    System.out.println("\nEnter expiration month: ");
+                    month = sc.nextInt();
+                    System.out.println("\nEnter expiration date: ");
+                    int day = sc.nextInt();
+                    expiryDate= new Date(year, month, day);
+                String securityCode;
+
+                    System.out.println("Enter Security code: ");
+                    securityCode= sc.next();
+
 		Card c = new Card(cardId, userId, cardNumber, expiryDate, securityCode);
-		
-		CardService cs = new CardService(con);
+                
 		cs.add(c);
 	}
 
@@ -891,10 +911,8 @@ public class AdminAndManager {
             }
             Scanner sc = new Scanner(System.in);
             System.out.println("Add a new user status ID that doesn't currently exist");
-            sc.nextLine();
             String userStatusID = sc.nextLine();
             System.out.println("Add a user status description");
-            sc.nextLine();
             String userStatus = sc.nextLine();
             UserStatus us = new UserStatus(userStatusID, userStatus);
             uss.add(us);
